@@ -1,0 +1,98 @@
+{
+  "miejsca": [
+    {
+      "id": "dom",
+      "nazwa": "Dom",
+      "adres": "Narbutta 45, 02-536 Warszawa, Polska",
+      "typ": "dom",
+      "opis": "Dom na Narbutta 45",
+      "koordynaty": {
+        "lat": 52.2105,
+        "lng": 21.0122
+      }
+    },
+    {
+      "id": "pegaz",
+      "nazwa": "Pegaz",
+      "adres": "Grojecka 77, 02-301 Warszawa, Polska",
+      "typ": "mieszkanie",
+      "opis": "Mieszkanie Pegaza na Grojeckiej 77",
+      "koordynaty": {
+        "lat": 52.2008,
+        "lng": 20.9789
+      }
+    },
+    {
+      "id": "pwc",
+      "nazwa": "PwC",
+      "adres": "Polna 11, 00-724 Warszawa, Polska",
+      "typ": "praca",
+      "opis": "Biuro PwC na Polnej 11",
+      "koordynaty": {
+        "lat": 52.2296,
+        "lng": 21.0122
+      }
+    },
+    {
+      "id": "szkola-mikiego",
+      "nazwa": "Szkoła Mikiego",
+      "adres": "Bruna 11, 02-594 Warszawa, Polska",
+      "typ": "szkoła",
+      "opis": "Szkoła Mikiego na Bruna 11",
+      "koordynaty": {
+        "lat": 52.2044,
+        "lng": 21.0011
+      }
+    },
+    {
+      "id": "pralnia-posciel",
+      "nazwa": "Pralnia pościel",
+      "adres": "Kwiatowa, Warszawa, Polska",
+      "typ": "pralnia",
+      "opis": "Pralnia na Kwiatowej - gdzie zanieść pościel",
+      "koordynaty": {
+        "lat": 52.2150,
+        "lng": 21.0050
+      }
+    },
+    {
+      "id": "pralnia-narzuta",
+      "nazwa": "Pralnia narzuta Pegaza",
+      "adres": "Hala Banacha, Warszawa, Polska",
+      "typ": "pralnia",
+      "opis": "Pralnia przy hali Banacha - narzuta z mieszkania Pegaza",
+      "koordynaty": {
+        "lat": 52.1989,
+        "lng": 20.9567
+      }
+    },
+    {
+      "id": "sklep-paczki",
+      "nazwa": "Sklep odbiór paczki",
+      "adres": "Narbutta 45, 02-536 Warszawa, Polska",
+      "typ": "sklep",
+      "opis": "Sklep odbiór paczki pod domem",
+      "koordynaty": {
+        "lat": 52.2105,
+        "lng": 21.0122
+      }
+    },
+    {
+      "id": "sklep-kwiatki",
+      "nazwa": "Sklep z kwiatkami",
+      "adres": "Narbutta, Warszawa, Polska",
+      "typ": "sklep",
+      "opis": "Sklep z kwiatkami na Narbutta",
+      "koordynaty": {
+        "lat": 52.2100,
+        "lng": 21.0100
+      }
+    }
+  ],
+  "metadata": {
+    "wersja": "1.0",
+    "data_utworzenia": "2025-12-08",
+    "format": "JSON",
+    "uklad_wspolrzednych": "WGS84"
+  }
+}

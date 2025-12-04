@@ -22,6 +22,7 @@
 - [Lawly](projects/Lawly.md)
 - [PwC BAM Flow](projects/PwC%20BAM%20Flow.md)
 - [Zdać mieszkanie Pegaza: opróżnić i posprzątać](projects/Mieszkanie%20Pegaza%20-%20opróżnienie.md)
+- [System GTD z asystentem AI](projects/System%20GTD%20z%20asystentem%20AI.md)
 
 ## ⏳ Referencje
 - [Someday/Maybe](someday-maybe.md) - Pomysły na przyszłość
@@ -36,4 +37,4 @@
 - [Pomysły i notatki](instructions/ideas-notes.md)
 
 ---
-*Ostatnia aktualizacja: 2025-12-09*
+*Ostatnia aktualizacja: 2025-12-04*

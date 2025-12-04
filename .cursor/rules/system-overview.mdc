@@ -29,7 +29,8 @@ Kluczowe zasady:
   - Listy mogą być tymczasowe (zamykane po realizacji) lub stałe
 - **`projects/`** — Jeden plik markdown na projekt (wieloetapowe przedsięwzięcia)
 - **`daily plans/`** — Plany dzienne w formacie `YYYY-MM-DD.md`
-- **`instructions/`** — Dokumentacja i notatki o systemie
+- **`instructions/`** — Instrukcje i dokumentacja systemu (jak używać systemu)
+- **`system/`** — Notatki o rozwoju systemu (pomysły, refleksje, backlog)
 
 ## Rytuały (komendy)
 

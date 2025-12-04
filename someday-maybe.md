@@ -11,4 +11,5 @@ Items you might want to do someday but not now. Review weekly.
 ## Learning
 
 ## Travel
+- Zobacz także: [💡 Pomysły na projekty](lists/Pomysły%20na%20projekty.md)
 

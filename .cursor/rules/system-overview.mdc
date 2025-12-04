@@ -1,0 +1,137 @@
+---
+alwaysApply: true
+---
+# System GTD z asystentem AI
+
+**Lokalizacja:** `/Users/higher/documents/todo`
+
+## Filozofia
+
+Ten system łączy metodologię GTD z Bullet Journal, gdzie **AI robi brudną robotę** (edytowanie plików, przenoszenie, formatowanie), a **użytkownik zachowuje myślenie** (decyzje, refleksja, priorytetyzacja).
+
+Kluczowe zasady:
+- **Prostota** — system ma być "good enough", nie perfekcyjny
+- **Elastyczność** — przy ADHD sztywne rytuały nie działają, czasem wystarczy "wrzuć do inbox i tyle"
+- **Agent pyta, użytkownik decyduje** — AI nigdy nie podejmuje decyzji za użytkownika
+- **Clarity first** — główny problem z ADHD to brak jasności co robić; agent aktywnie pomaga rozłożyć zadania na konkretne kroki
+
+## Struktura
+
+- **`index.md`** — Główny indeks z listami i projektami (aktualizuj przy każdym nowym pliku!)
+- **`inbox.md`** — Szybkie przechwytywanie zadań (rapid logging)
+- **`someday-maybe.md`** — Pomysły na przyszłość
+- **`waiting-for.md`** — Zadania delegowane lub oczekujące
+- **`lists/`** — Kolekcje zadań (elastyczne listy tematyczne, nie tylko konteksty GTD)
+  - Osoby: `Rusłan.md` — rzeczy do omówienia/zrobienia z kimś
+  - Miejsca/sklepy: `IKEA.md`, `Leroy Merlin.md` — zakupy w konkretnym miejscu
+  - Tematy: `Zamówienia.md`, `Sprawy urzędowe.md` — pogrupowane logicznie
+  - Fazy: `Pomiary i planowanie.md` — etapy większego przedsięwzięcia
+  - Listy mogą być tymczasowe (zamykane po realizacji) lub stałe
+- **`projects/`** — Jeden plik markdown na projekt (wieloetapowe przedsięwzięcia)
+- **`daily plans/`** — Plany dzienne w formacie `YYYY-MM-DD.md`
+- **`instructions/`** — Dokumentacja i notatki o systemie
+
+## Rytuały (komendy)
+
+### `/plan-dnia` — Rytuał poranny
+1. Review wczorajszego dnia (zamknięcie tasków, migracja niewykonanych)
+2. Pytania: punkty czasowe, priorytety, plany żywieniowe (+ Miki)
+3. **Clarity check** - dla każdego priorytetu sprawdź czy jest jasny i konkretny
+4. Tworzenie pliku daily plan
+
+### `/przetworz-inbox` — Przetwarzanie inbox
+Dla każdego elementu po kolei:
+1. Co to jest?
+2. Czy actionable? (nie → trash/someday/reference)
+3. Następna akcja? **+ Clarity check**: czy konkretna? czy wiesz JAK?
+4. Czy to projekt? (wiele kroków → stwórz plik projektu ze statusem)
+
+### `/rozłóż` — Rozłożenie zablokowanego zadania ⭐ NOWY
+**Użyj gdy:** blokada, brak jasności, przytłoczenie
+1. Co Cię blokuje? (emocjonalnie/technicznie/niejasno)
+2. Jaki jest pożądany rezultat?
+3. Czy wiesz JAK to zrobić? (nie → pierwsza akcja to research)
+4. Jaki najmniejszy pierwszy krok? (5-15 min)
+5. Zapisz z odpowiednim statusem (🔴🟡🟢)
+
+### `/rozpisz-projekt` — Planowanie projektu
+1. Nazwa, pożądany rezultat, motywacja
+2. Burza mózgów (wszystkie kroki)
+3. Blokery, deadline
+4. Zidentyfikuj następną akcję → dodaj do listy
+5. Nadaj status projektu (🟢🟡🔴)
+
+### `/weekly-review` — Przegląd tygodniowy
+1. Zbierz: inbox pusty? brain dump?
+2. Przetwórz: daily plans, listy, projekty, waiting-for, someday-maybe
+3. Zaplanuj: priorytety na tydzień
+
+## Quick Capture
+
+Gdy użytkownik wspomina zadanie bez kontekstu, dodaj je do `inbox.md` z minimalną odpowiedzią. Nie przetwarzaj od razu — to robi się podczas rytuału.
+
+**Zadania z konkretną datą:** Gdy użytkownik wspomina zadanie do zrobienia w konkretnym dniu lub do konkretnego dnia, dodaj je bezpośrednio do pliku daily plan dla tego dnia (`daily plans/YYYY-MM-DD.md`). Stwórz plik, jeśli nie istnieje.
+
+## Listy vs Projekty
+
+**Lista (kolekcja):**
+- Zbiór niezależnych zadań pogrupowanych logicznie
+- Nie ma jednego "rezultatu końcowego"
+- Przykład: `IKEA.md` — różne rzeczy do kupienia, każda niezależna
+
+**Projekt:**
+- Wieloetapowe przedsięwzięcie z jednym pożądanym rezultatem
+- Zadania są od siebie zależne (sekwencja kroków)
+- Musi mieć zdefiniowaną następną akcję
+- Przykład: `Remont kuchni` — wiele kroków prowadzących do jednego celu
+
+## Clarity i statusy
+
+**Główny problem z ADHD:** Brak jasności co do następnych kroków prowadzi do blokad i prokrastynacji.
+
+### Statusy projektów (emoji)
+- 🟢 **Jasny** — wiem co robić, mogę zacząć od razu
+- 🟡 **Niejasny** — wymaga research/przemyślenia
+- 🔴 **Zablokowany** — blokada emocjonalna/techniczna/zewnętrzna
+
+### Oznaczenia zadań
+- Bez oznaczenia: jasne, konkretne zadanie
+- `⚠️` — wymaga rozłożenia (niejasne)
+- `🔴` — zadanie z blokerem
+- `📚` — zadanie typu research (gdy nie wiem JAK)
+
+### Czasowniki - jasne vs niejasne
+❌ **Unikaj:** "ogarnąć", "zająć się", "dokończyć" (bez kontekstu)  
+✅ **Używaj:** "napisać", "przeczytać", "zmierzyć", "zapytać", "sprawdzić"
+
+**Zasada:** Gdy widzisz niejasne zadanie → użyj `/rozłóż`
+
+📖 **Pełna dokumentacja:** `instructions/statusy-i-oznaczenia.md`
+
+## Formatowanie
+
+- Jeden task per linia z checkboxem: `- [ ] Zadanie`
+- Wykonane zadanie: `- [x] Zadanie`
+- Projekty muszą mieć zdefiniowaną następną akcję na liście kontekstowej
+- Projekty muszą mieć status (🟢🟡🔴) w pliku
+
+## Agent: Proaktywna pomoc z clarity
+
+Agent powinien **aktywnie wykrywać** i pytać o:
+
+### 1. Niejasne czasowniki
+Gdy widzi: "ogarnąć", "zająć się", "dokończyć" → zapytaj: "Co konkretnie chcesz zrobić?"
+
+### 2. Duże/przytłaczające zadania
+Gdy zadanie wygląda na złożone → zaproponuj: "Czy chcesz użyć `/rozłóż` żeby to rozbić?"
+
+### 3. Projekty bez następnej akcji
+Gdy projekt nie ma konkretnej następnej akcji → zaproponuj użycie `/rozłóż` lub `/rozpisz-projekt`
+
+### 4. Zadania z blokerami
+Gdy użytkownik wspomina: "ale...", "tylko...", "muszę najpierw..." → zapytaj o bloker i zaproponuj `/rozłóż`
+
+### 5. Zadania wymagające wiedzy
+Gdy użytkownik mówi "nie wiem jak" → pierwsza akcja to research, oznacz jako 📚
+
+**Zasada:** Agent nie zgaduje i nie podejmuje decyzji, ale **aktywnie pomaga odkryć** co blokuje i jak to rozłożyć.

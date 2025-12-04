@@ -1,8 +1,9 @@
-# Lawly
+# Lawyer Onboarding
 
 ## Status
-**Ostatnia aktualizacja:** 2025-12-08  
-**Stan:** 🟡 W trakcie rozpisywania / Postęp w commitowaniu zmian
+**Ostatnia aktualizacja:** 2025-12-04  
+**Stan:** 🟡 W trakcie rozpisywania / Postęp w commitowaniu zmian  
+**Obszar:** [Lawly](../areas/Lawly.md)
 
 ### Obecna sytuacja (zaktualizowana)
 - ✅ **Zacommitowane:** Refaktoryzacja autentykacji w backend (2025-12-08)
@@ -16,20 +17,11 @@
 ## Kontekst projektu
 
 ### Co to za projekt?
-**Lawly** - marketplace platforma łącząca klientów z prawnikami w Polsce.
+**US-081: Profile Management** - system zarządzania profilami prawników w Lawly.
 
 **Struktura repo:**
-- `/Users/higher/Projects/lawly/` - główny folder z dokumentacją i workspace
-- `/Users/higher/Projects/lawly-be/` - Backend (Django 5.2, Django Ninja, PostgreSQL)
-- `/Users/higher/Projects/lawly-fe/` - Frontend (Next.js, TypeScript)
-
-**Tech stack:**
-- Backend: Python 3.12, Django 5.2, Django Ninja (REST API), PostgreSQL 17, Poetry
-- Frontend: Next.js, TypeScript, React
-
-### PR-y o profilu prawnika (feature/US-081-profile-management)
-
-**Branch:** `feature/US-081-profile-management` (9 commitów w backend, clean w frontend)
+- Backend: `/Users/higher/Projects/lawly-be/`
+- Frontend: `/Users/higher/Projects/lawly-fe/`
 
 ---
 
@@ -203,194 +195,7 @@
 
 ---
 
-## Analiza: Co może brakować w dokończeniu PR
-
-### Backend (lawly-be):
-1. ✅ Testy - są kompleksowe (6 test cases dla signals, 374 linie dla API, 249 dla service)
-2. ✅ Dokumentacja - jest (docstringi, README zaktualizowany)
-3. ⚠️ `create_test_users.py` - czy to ma być w PR? (pomocne do testowania, może być osobno)
-4. ✅ Refaktoryzacja - zrobiona (DRY principle)
-5. ❓ Inne endpointy - czy nie ma innych miejsc z duplikacją autentykacji? (sprawdzić)
-
-### Frontend (lawly-fe):
-1. ✅ Puste linie - usunięte
-2. ❓ Formularz działa? - trzeba przetestować
-3. ❓ Obsługa błędów - czy są odpowiednie komunikaty?
-4. ❓ Loading states - czy są podczas zapisywania?
-
-**Wniosek:** Backend prawdopodobnie kompletny. Frontend wymaga sprawdzenia.
-
----
-
-## Pytania do rozpisania
-
-### 1. Pożądany rezultat
-**Co chcesz osiągnąć w najbliższym czasie?**
-- [x] Wrzucić te PR-y?
-- [x] Wrócić do regularnej pracy?
-- [x] Zakończyć feature profilu prawnika?
-
-**Odpowiedź:**
-Wszystkie 3 - chcę wrzucić PR-y, wrócić do regularnej pracy i zakończyć feature profilu prawnika.
-
-### 2. Zawartość PR-ów
-**Co dokładnie zawierają te PR-y o profilu prawnika? Jaką funkcjonalność dodają?**
-
-**Odpowiedź:**
-Muszę sobie przypomnieć co już zostało zrobione, plus tak naprawdę obejrzeć kod i upewnić się, że go rozumiem.
-
-**Pomysł na pomoc:**
-Przejść przez kod kawałeczkami z AI - pokazywać co zostało zrobione w kontekście, dbając o to że rozumiem. AI powinien:
-- Pokazywać małe kawałki kodu
-- Wyjaśniać kontekst każdej zmiany
-- Sprawdzać czy rozumiem przed przejściem dalej
-- Łączyć zmiany z szerszym kontekstem projektu
-
-### 3. Blokada emocjonalna
-**Co Cię najbardziej blokuje?**
-- [x] Strach przed komentarzami/krytyką?
-- [ ] Przytłoczenie ilością pracy?
-- [x] Brak jasności co do wymagań?
-- [x] Coś innego?
-
-**Odpowiedź:**
-Strach przed krytyką, ale głównie dlatego że:
-- Od tak dawna nie pracowałem nad tym projektem
-- Nie wiem co trzeba zrobić żeby pchnąć do przodu - **brak jasności (clarity)**
-- Jarzę się teraz innymi tematami (budowanie agentowych rozwiązań w Cursorze) i mało mnie to interesuje
-- Utknąłem w próbie budowania systemu - przesadziłem, potrzebuję prostszego podejścia
-
-**Kluczowe potrzeby:**
-1. **Clarity** - jasność co dalej zrobić
-2. **Połączenie z motywacją** - jak połączyć to co mnie jara (agentowe rozwiązania) z projektem Lawly
-3. **Prostsze podejście** - do systemu który buduję (nie przesadzać)
-
-**Pomysły na połączenie z tym co jara (agentowe rozwiązania):**
-
-1. **Cursor AI do nauki kodu** ✅ (w trakcie):
-   - Przejść przez implementację kawałeczkami
-   - AI pokazuje kontekst, sprawdza zrozumienie
-   - Buduje confidence przed review
-
-2. **Agent do code review** (prosty):
-   - Checklist przed push: testy? dokumentacja? typy?
-   - Automatyczne sprawdzenie czy są wszystkie potrzebne pliki
-   - **Nie przesadzać:** prosty script/prompt, nie cały system
-
-3. **Agent do generowania testów** (przyszłość):
-   - Gdy dodajesz nowy endpoint, agent sugeruje testy
-   - Oszczędność czasu, mniej stresu
-
-4. **Workflow automation** (prosty):
-   - Jeden command do: commit → push → create PR
-   - Szablon PR description (automatycznie z commitów)
-   - **Nie przesadzać:** bash script lub Cursor command
-
-5. **Agentowe rozwiązanie do Lawly** (długoterminowe):
-   - Może w Lawly użyć AI do automatyzacji (matching klientów z prawnikami?)
-   - Może chatbot do pomocy klientom w wyborze prawnika?
-   - **Połączenie:** praca nad Lawly = nauka jak budować agentowe produkty
-
-**Klucz:** 
-- Proste, praktyczne rozwiązania
-- Nie przesadzać (jak z tym systemem)
-- Każde narzędzie musi rozwiązywać konkretny problem
-- Budować iteracyjnie, nie od razu cały system
-
-### 4. Deadline i kontekst
-**Są jakieś deadline'y? Czy Roman czeka na to? Czy to blokuje innych?**
-
-**Odpowiedź:**
-- ❌ **Brak deadline'ów** - Roman na nic nie czeka
-- 👥 **Zespół:** 3 developerów (Ty, Roman, +1) + Łukasz (biznes, koncept) + Adrian (biznes)
-- 🏢 **Kontekst:** Zakładanie spółki, wniosek o dofinansowanie
-- 💰 **Wynagrodzenie:** Brak - praca społeczna, samoorganizacja
-- 📋 **Scope:** Nie jesteśmy dokładnie poumawiani na zakres pracy
-
-**Wniosek:** Nie ma presji czasowej, możesz pracować w swoim tempie.
-
-### 5. Następne kroki w obszarze Profile Management
-
-**Co jeszcze będzie potrzebne do zakończenia obszaru:**
-
-1. **Lawyer Profile Management** (obecny PR) ✅ prawie gotowe:
-   - GET/POST `/me/profile/` - ✅ zrobione
-   - Refaktoryzacja - ✅ zrobione
-   - Frontend formularz - prawdopodobnie gotowy
-
-2. **User Profile Management** (można zrobić razem):
-   - Ten sam formularz i schematy dla klientów
-   - GET/POST `/me/profile/` dla roli "client"
-
-3. **Service Management** (nowy obszar):
-   - CRUD usług prawnika
-   - Lista usług, dodawanie/edycja/usuwanie
-   - Ceny, opisy, kategorie
-
-**Dalsza kolejność (po Profile & Service Management):**
-1. Kalendarze, sloty, rezerwacje
-2. Case management
-
----
-
-## Następna akcja (konkretne kroki)
-
-### Krok 1: Zrozumieć kod (z pomocą AI) 📚
-- Przejść przez implementację kawałeczkami
-- AI pokazuje kod + kontekst, sprawdza zrozumienie
-- Skupić się na flow: signal → service → API → frontend
-
-### Krok 2: Opcjonalnie zacommitować `create_test_users.py`
-```bash
-cd /Users/higher/Projects/lawly-be
-git add users/management/commands/create_test_users.py
-git commit -m "feat: Add management command to create test users"
-```
-
-### Krok 3: Push i stwórz PR
-```bash
-# Backend
-cd /Users/higher/Projects/lawly-be
-git push origin feature/US-081-profile-management
-
-# Frontend
-cd /Users/higher/Projects/lawly-fe
-git push origin feature/US-081-profile-management
-```
-
-### Krok 4: Sprawdź konflikty
-- Zobacz czy są konflikty z main
-- Jeśli tak - rozwiąż
-
-### Krok 5: Stwórz PR w GitHub
-- Tytuł: "Feature: Lawyer Profile Management (US-081)"
-- Opis: automatyczne tworzenie profilu, GET/POST endpointy, refaktoryzacja autentykacji
-- Oznacz Roman do review
-
----
-
 ## Plan manualnego testowania
-
-### TL;DR - Quick Start (dla niecierpliwych)
-
-```bash
-# Terminal 1 - Backend
-cd /Users/higher/Projects/lawly-be
-docker-compose up -d
-poetry shell
-poetry run python manage.py create_test_users  # Zapisz tokeny!
-poetry run python manage.py runserver
-
-# Terminal 2 - Frontend
-cd /Users/higher/Projects/lawly-fe
-yarn dev
-
-# Test w przeglądarce
-# http://localhost:3000 → zaloguj jako lawyer1@test.com / TestPass123!
-# Przejdź do /panel/profil/edit → wypełnij formularz → zapisz
-```
-
----
 
 ### Setup (jednorazowo, ~10 min)
 
@@ -541,87 +346,6 @@ curl -X POST http://localhost:8000/api/lawyers/me/profile/ \
 
 ---
 
-#### Test 5: Edge cases
-**Cel:** Sprawdzić nietypowe scenariusze
-
-**Scenariusze:**
-1. **Brak profilu:** Co się stanie jeśli profile nie istnieje? (nie powinno się zdarzyć przez signal)
-2. **Nieprawidłowe city_id:** POST z nieistniejącym city_id
-3. **Nieprawidłowe specialization_ids:** POST z nieistniejącymi specjalizacjami
-4. **Bio za krótkie:** POST z bio < 50 znaków
-5. **Puste pola:** POST bez wymaganych pól
-
-**Oczekiwane rezultaty:**
-- Wszystkie powinny zwracać 400 z opisem błędu
-
----
-
-### Pomocne komendy do debugowania
-
-#### Backend:
-```bash
-# Zobacz logi serwera
-# (będą w terminalu gdzie uruchomiłeś runserver)
-
-# Sprawdź bazę danych w Django shell
-poetry run python manage.py shell
->>> from users.models import User
->>> from lawyers.models import LawyerProfile
->>> User.objects.all()
->>> LawyerProfile.objects.all()
->>> exit()
-
-# Django admin (jeśli potrzebujesz GUI)
-# http://localhost:8000/admin
-# (potrzebujesz superuser: manage.py createsuperuser)
-
-# Uruchom testy (jeśli chcesz sprawdzić czy wszystko działa)
-poetry run pytest lawyers/tests/test_api.py -v
-```
-
-#### Frontend:
-```bash
-# Zobacz logi w konsoli przeglądarki
-# Developer Tools → Console (F12)
-
-# Zobacz Network tab
-# Developer Tools → Network (F12)
-# Sprawdź requesty do API (status, body, headers)
-```
-
-#### Przydatne endpointy:
-- `GET /api/marketplace/cities/` - lista miast
-- `GET /api/marketplace/specializations/` - lista specjalizacji
-- `GET /api/docs` - Swagger UI (interaktywna dokumentacja API)
-
----
-
-### Checklist testowania
-
-#### Backend:
-- [ ] Serwer działa (http://localhost:8000)
-- [ ] Test users utworzeni (create_test_users)
-- [ ] GET /me/profile/ - 200 z tokenem prawnika
-- [ ] GET /me/profile/ - 401 bez tokenu
-- [ ] GET /me/profile/ - 403 z tokenem klienta
-- [ ] POST /me/profile/ - 200 z poprawnymi danymi
-- [ ] POST /me/profile/ - 400 z bio < 50 znaków
-- [ ] POST /me/profile/ - 400 z nieprawidłowym city_id
-- [ ] POST /me/profile/ - 401 bez tokenu
-
-#### Frontend:
-- [ ] Serwer działa (http://localhost:3000)
-- [ ] Logowanie działa
-- [ ] Formularz `/panel/profil/edit` się ładuje
-- [ ] Pola są wypełnione danymi z API
-- [ ] Walidacja działa (bio min 50 znaków)
-- [ ] Zapisywanie działa
-- [ ] Loading state podczas zapisywania
-- [ ] Komunikat sukcesu po zapisie
-- [ ] Obsługa błędów API
-
----
-
 ## Zadania do wykonania (TODO)
 
 ### Priorytet 1: Zrozumienie
@@ -671,15 +395,7 @@ poetry run pytest lawyers/tests/test_api.py -v
 
 ---
 
-## Przypomnienie: Prostsze podejście
+## Motto
 
-**Problem:** Utknąłeś w budowaniu systemu - przesadziłeś, potrzebujesz prostszego podejścia.
-
-**Rozwiązanie dla Lawly:**
-1. ✅ Zacommituj co masz (zrobione dzisiaj)
-2. 📚 Zrozum kawałeczkami (następny krok)
-3. 🚀 Push i PR (potem)
-4. ⏭️ Nie myśl o całym systemie - jeden krok na raz
-
-**Motto:** "Good enough is good enough" - nie musi być perfekcyjne, musi działać.
+"Good enough is good enough" - nie musi być perfekcyjne, musi działać.
 

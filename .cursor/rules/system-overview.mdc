@@ -17,17 +17,21 @@ Kluczowe zasady:
 
 ## Struktura
 
-- **`index.md`** — Główny indeks z listami i projektami (aktualizuj przy każdym nowym pliku!)
+- **`index.md`** — Główny indeks z obszarami, listami i projektami (aktualizuj przy każdym nowym pliku!)
 - **`inbox.md`** — Szybkie przechwytywanie zadań (rapid logging)
 - **`someday-maybe.md`** — Pomysły na przyszłość
 - **`waiting-for.md`** — Zadania delegowane lub oczekujące
+- **`areas/`** — Obszary odpowiedzialności (ciągłe sfery życia i pracy)
+  - PwC, Lawly, Dom, Finanse, Zdrowie
+  - Każdy obszar może zawierać projekty i zadania operacyjne
+  - Nie mają "końca" - są stale aktywne
 - **`lists/`** — Kolekcje zadań (elastyczne listy tematyczne, nie tylko konteksty GTD)
   - Osoby: `Rusłan.md` — rzeczy do omówienia/zrobienia z kimś
   - Miejsca/sklepy: `IKEA.md`, `Leroy Merlin.md` — zakupy w konkretnym miejscu
-  - Tematy: `Zamówienia.md`, `Sprawy urzędowe.md` — pogrupowane logicznie
-  - Fazy: `Pomiary i planowanie.md` — etapy większego przedsięwzięcia
+  - Konteksty: `Telefon.md`, `Komputer.md` — według narzędzia/miejsca
+  - Tematy: `Pomiary i planowanie.md` — pogrupowane logicznie
   - Listy mogą być tymczasowe (zamykane po realizacji) lub stałe
-- **`projects/`** — Jeden plik markdown na projekt (wieloetapowe przedsięwzięcia)
+- **`projects/`** — Jeden plik markdown na projekt (wieloetapowe przedsięwzięcia z określonym końcem)
 - **`daily plans/`** — Plany dzienne w formacie `YYYY-MM-DD.md`
 - **`instructions/`** — Instrukcje i dokumentacja systemu (jak używać systemu)
 - **`system/`** — Notatki o rozwoju systemu (pomysły, refleksje, backlog)
@@ -73,18 +77,28 @@ Gdy użytkownik wspomina zadanie bez kontekstu, dodaj je do `inbox.md` z minimal
 
 **Zadania z konkretną datą:** Gdy użytkownik wspomina zadanie do zrobienia w konkretnym dniu lub do konkretnego dnia, dodaj je bezpośrednio do pliku daily plan dla tego dnia (`daily plans/YYYY-MM-DD.md`). Stwórz plik, jeśli nie istnieje.
 
-## Listy vs Projekty
+## Obszary vs Projekty vs Listy
+
+**Obszar odpowiedzialności (Area):**
+- Ciągła sfera życia lub pracy bez "końca"
+- Wymaga utrzymania standardu/rezultatu długoterminowego
+- Zawiera zarówno projekty jak i zadania operacyjne
+- Przykład: `Lawly` — obszar biznesowy, rozwój produktu (nie skończy się)
+- Przykład: `Dom` — gospodarstwo domowe (zawsze wymaga uwagi)
+
+**Projekt:**
+- Wieloetapowe przedsięwzięcie z jednym pożądanym rezultatem
+- Ma określony scope i koniec
+- Zadania mogą być od siebie zależne (sekwencja kroków)
+- Musi mieć zdefiniowaną następną akcję
+- Należy do obszaru (opcjonalnie)
+- Przykład: `Lawyer Onboarding` — projekt w ramach obszaru Lawly
 
 **Lista (kolekcja):**
 - Zbiór niezależnych zadań pogrupowanych logicznie
 - Nie ma jednego "rezultatu końcowego"
+- Zadania można wykonywać w dowolnej kolejności
 - Przykład: `IKEA.md` — różne rzeczy do kupienia, każda niezależna
-
-**Projekt:**
-- Wieloetapowe przedsięwzięcie z jednym pożądanym rezultatem
-- Zadania są od siebie zależne (sekwencja kroków)
-- Musi mieć zdefiniowaną następną akcję
-- Przykład: `Remont kuchni` — wiele kroków prowadzących do jednego celu
 
 ## Clarity i statusy
 

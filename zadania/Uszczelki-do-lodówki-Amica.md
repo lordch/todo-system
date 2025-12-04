@@ -1,7 +1,7 @@
 # Uszczelki do lodówki Amica BK316BUW+04AT (BK3165.4)
 
 ## Status
-🟢 W trakcie
+✅ Zamówione (2025-12-04)
 
 ## Źródło
 - **Lista:** [Telefon.md](../lists/Telefon.md)

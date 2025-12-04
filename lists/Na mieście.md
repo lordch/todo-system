@@ -6,7 +6,7 @@ Rzeczy do zrobienia poza domem (sprawy urzędowe, wizyty w sklepach, odbiory).
 - [ ] Pojechać do Urzędu Skarbowego Mokotów - wziąć zaświadczenie o płaceniu podatków w Warszawie
 - [ ] Odebrać od Hnatiuka blat (przy okazji instalacji piecyka)
 - [ ] Odebrać szafkę z Międzylesia (do pokoju Mikiego, przy okazji wizyty u rodziny Zofki)
-- [ ] Zanieść pranie do pralni
+- [ ] Zanieść pranie do pralni → **2025-12-05**
 
 ## Wizyty w sklepach
 

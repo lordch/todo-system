@@ -34,7 +34,7 @@
 ## ℹ️ Instrukcje i Kontekst
 - [Kontekst Użytkownika](instructions/user_context.md) - Ważne osoby, miejsca i tło
 - [Statusy i oznaczenia](instructions/statusy-i-oznaczenia.md)
-- [Pomysły i notatki](instructions/ideas-notes.md)
+- [Pomysły i notatki](system/ideas-notes.md)
 
 ---
 *Ostatnia aktualizacja: 2025-12-04*

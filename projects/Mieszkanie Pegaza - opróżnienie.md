@@ -24,5 +24,5 @@ Wyprowadziłem się, trzeba opróżnić mieszkanie i posprzątać przed zdaniem.
 Piątek 2025-12-12
 
 ## Następna akcja
-Wizyta w piątek → lista: Mieszkanie Pegaza - piątek
+Wizyta w poniedziałek 2025-12-08 → lista: Mieszkanie Pegaza - piątek
 

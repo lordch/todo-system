@@ -146,3 +146,4 @@ Agent: Czy kontynuować pracę nad tym zadaniem?
 - Backup: przed edycją istniejącego pliku można zapytać czy zrobić backup
 - Automatyczne linkowanie: agent może automatycznie dodać link do pliku zadania w źródle (opcjonalnie)
 
+

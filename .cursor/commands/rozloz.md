@@ -133,3 +133,4 @@ Zapisałem projekt w projects/Lawly.md. Kiedy planujesz to zrobić?"
 - Czasem wystarczy "brain dump" - spisać wszystkie myśli, potem wybrać pierwszą akcję
 - Agent powinien być **cierpliwy** - czasem potrzeba kilku iteracji żeby dojść do prawdziwego blokera
 
+

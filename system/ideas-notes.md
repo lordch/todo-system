@@ -191,3 +191,4 @@ listy/               # custom/tematyczne
 
 _Ostatnia aktualizacja: 2025-12-04_
 
+

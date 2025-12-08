@@ -17,8 +17,8 @@
 ### 👥 Osoby
 - [🔧 Rusłan](lists/Rusłan.md) - Do omówienia i wykonania
 - [🔧 Miki](lists/Miki.md) - Do omówienia i zrobienia z Mikim
-- [💰 Elżbieta - rozliczenia](lists/Elżbieta%20-%20rozliczenia.md) - Rozliczenia
 - [🏠 Zofka - mieszkanie](lists/Zofka%20-%20mieszkanie.md) - Wspólne sprawy mieszkaniowe
+- [💰 Elżbieta - rozliczenia](lists/Elżbieta%20-%20rozliczenia.md) - Rozliczenia
 
 ### 🛒 Zakupy / 📍 Konteksty
 - [🛒 Leroy Merlin](lists/Leroy%20Merlin.md) - Zakupy i zwroty

@@ -18,3 +18,4 @@ Zadania do wykonania podczas wizyty w piątek 2025-12-05.
 ## Po wizycie
 - [ ] Wystawić łóżko na OLX lub gdzieś
 
+

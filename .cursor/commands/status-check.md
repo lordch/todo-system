@@ -121,3 +121,4 @@ Na końcu pokaż podsumowanie:
 | Przepytanie ze statusu | + planowanie na tydzień |
 | 10-15 minut | 30-60 minut |
 
+

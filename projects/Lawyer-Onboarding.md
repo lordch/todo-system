@@ -399,3 +399,4 @@ curl -X POST http://localhost:8000/api/lawyers/me/profile/ \
 
 "Good enough is good enough" - nie musi być perfekcyjne, musi działać.
 
+

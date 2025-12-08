@@ -85,3 +85,4 @@ _Brak aktualnych zadań_
 - Nie przesadzać
 - Każde narzędzie musi rozwiązywać konkretny problem
 
+

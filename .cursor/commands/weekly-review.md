@@ -14,17 +14,25 @@ Przeprowadź mnie przez tygodniowy przegląd systemu GTD.
 - Zamknij wykonane zadania
 - Przenieś niewykonane do odpowiednich list lub `someday-maybe.md`
 
-### Przejrzyj listy kontekstowe
-Dla każdej listy w `lists/`:
-- Czy wszystkie zadania są nadal aktualne?
-- Czy coś można usunąć lub przenieść do someday-maybe?
-- Czy są nowe następne akcje do dodania?
+### Przejrzyj obszary odpowiedzialności
+Dla każdego obszaru w `areas/`:
+- Jak wygląda ten obszar? Czy jest utrzymany standard?
+- Czy są zadania operacyjne do dodania?
+- Czy projekty w tym obszarze są aktualne?
+- Czy pojawiły się nowe potrzeby/projekty?
 
 ### Przejrzyj projekty
 Dla każdego projektu w `projects/`:
 - Czy projekt jest nadal aktywny?
 - Czy ma zdefiniowaną następną akcję?
 - Czy następna akcja jest na odpowiedniej liście?
+- Czy projekt należy do któregoś obszaru?
+
+### Przejrzyj listy kontekstowe
+Dla każdej listy w `lists/`:
+- Czy wszystkie zadania są nadal aktualne?
+- Czy coś można usunąć lub przenieść do someday-maybe?
+- Czy są nowe następne akcje do dodania?
 
 ### Przejrzyj Waiting For
 - Sprawdź `waiting-for.md`

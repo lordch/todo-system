@@ -5,10 +5,10 @@ Notatki dotyczące wspólnych spraw mieszkaniowych (nie mieszkania Pegaza).
 ## 🛒 IKEA
 
 - [ ] Szczotka do kibla
-- [ ] Szczotka do zmywania
+- [x] Szczotka do zmywania
 - [ ] Pudełka do komody
 - [ ] Pudełka na szafę (?)
-- [ ] Sztućce
+- [x] Sztućce
 - [ ] Śmietnik
 - [ ] Wieszaczki/palak na ścierki
 - [ ] Duży garnek
@@ -16,13 +16,13 @@ Notatki dotyczące wspólnych spraw mieszkaniowych (nie mieszkania Pegaza).
 ## 🛒 Leroy Merlin
 
 ### Do kupienia
-- [ ] Bateria do kuchni
+- [x] Bateria do kuchni
 - [ ] Kable do elektryczności i sprzęt
 
 ### Do zwrotu
-- [ ] Bateria (stara)
-- [ ] Kabel
-- [ ] Nić hydrauliczna
+- [x] Bateria (stara)
+- [x] Kabel
+- [x] Nić hydrauliczna
 
 ## 🔧 Do wykonania (z Rusłanem)
 

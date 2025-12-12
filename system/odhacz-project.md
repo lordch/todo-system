@@ -7,6 +7,8 @@
 
 System GTD oparty na plikach markdown z webowym interfejsem do odhaczania zadań i planowaną integracją z Claude AI.
 
+**Design (szczegółowy):** [`system/odhacz-design-system.md`](odhacz-design-system.md)
+
 ---
 
 ## Architektura obecna (lokalna)

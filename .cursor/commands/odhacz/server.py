@@ -97,13 +97,26 @@ def git_push():
 
 
 def git_sync():
-    """Pull + Push."""
+    """Pull + Push z obsługą uncommitted changes."""
+    # Commit lokalne zmiany jeśli są
+    git_exec(["add", "."], REPO_ROOT)
+    has_changes, _ = git_exec(["diff", "--cached", "--quiet"], REPO_ROOT)
+    
+    if not has_changes:  # diff returns non-zero if there are changes
+        commit_ok, commit_out = git_exec(["commit", "-m", f"odhacz: auto-commit {datetime.now().isoformat()}"], REPO_ROOT)
+    
+    # Pull
     pull_ok, pull_out = git_pull()
     if not pull_ok and "CONFLICT" in pull_out:
         return False, {"error": "conflict", "details": pull_out}
     
+    # Push
     push_ok, push_out = git_push()
-    return push_ok, {"pull": pull_out, "push": push_out}
+    
+    if push_ok:
+        return True, {"message": "Zsynchronizowane", "pull": pull_out, "push": push_out}
+    else:
+        return False, {"error": "push_failed", "details": push_out}
 
 
 def scan_tasks(path_filter: str = "", checked_filter: str = "all", search: str = "") -> list:

@@ -234,21 +234,21 @@
     .modal {
       background: #16213e;
       border-radius: 8px;
-      width: 90%;
-      max-width: 1200px;
-      max-height: 90vh;
+      width: 96%;
+      height: 95vh;
       display: flex;
       flex-direction: column;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
     
     .modal-header {
-      padding: 1rem 1.5rem;
+      padding: 0.75rem 1.5rem;
       background: #0f3460;
       border-radius: 8px 8px 0 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-shrink: 0;
     }
     
     .modal-header h3 {
@@ -272,8 +272,9 @@
     .modal-tabs {
       display: flex;
       gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
+      padding: 0.5rem 1.5rem;
       border-bottom: 1px solid #0f3460;
+      flex-shrink: 0;
     }
     
     .modal-tab {
@@ -303,7 +304,7 @@
       display: none;
       flex: 1;
       overflow: auto;
-      padding: 1.5rem;
+      padding: 0.75rem;
     }
     .tab-panel.active { display: flex; flex-direction: column; }
     
@@ -342,11 +343,12 @@
     }
     
     .modal-footer {
-      padding: 1rem 1.5rem;
+      padding: 0.75rem 1.5rem;
       border-top: 1px solid #0f3460;
       display: flex;
       gap: 0.75rem;
       justify-content: flex-end;
+      flex-shrink: 0;
     }
     
     .file-group h2 .edit-btn {

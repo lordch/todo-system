@@ -19,6 +19,9 @@ const searchInput = $('#search');
 
 // Init
 async function init() {
+  $('#pull-btn').addEventListener('click', pullChanges);
+  $('#push-btn').addEventListener('click', pushChanges);
+
   await loadTasks();
   await checkSyncStatus();
   
@@ -38,22 +41,13 @@ async function checkSyncStatus() {
     const data = await resp.json();
     
     if (data.is_railway) {
-      const syncBtn = $('#sync-btn');
-      const syncStatus = $('#sync-status');
-      
-      syncBtn.style.display = 'inline-block';
-      syncStatus.style.display = 'inline';
-      
-      if (data.last_sync) {
-        const ago = timeSince(new Date(data.last_sync));
-        syncStatus.textContent = ` · Sync: ${ago} temu`;
-      } else {
-        syncStatus.textContent = ' · Sync: nigdy';
-      }
+      $('#pull-btn').style.display = 'inline-block';
+      $('#push-btn').style.display = 'inline-block';
       
       if (data.pending_changes) {
-        syncBtn.textContent = '🔄 Sync *';
-        syncBtn.style.background = '#e94560';
+        const pushBtn = $('#push-btn');
+        pushBtn.textContent = 'Push *';
+        pushBtn.style.borderColor = '#e94560';
       }
     }
   } catch (err) {
@@ -333,28 +327,52 @@ async function saveChanges() {
   }
 }
 
-async function syncGitHub() {
-  const btn = $('#sync-btn');
+async function pullChanges() {
+  const btn = $('#pull-btn');
   const originalText = btn.textContent;
   btn.disabled = true;
-  btn.textContent = 'Syncuję...';
+  btn.textContent = 'Pull...';
   
   try {
-    const resp = await fetch('/api/sync', { method: 'POST' });
+    const resp = await fetch('/api/git/pull', { method: 'POST' });
     const result = await resp.json();
     
     if (result.success) {
-      alert('✅ Zsynchronizowane z GitHub');
-      await checkSyncStatus();
+      alert('✅ Pobrano zmiany');
       await loadTasks();
     } else {
-      alert(`❌ Błąd sync:\n${result.error || JSON.stringify(result)}`);
+      alert(`❌ Błąd pull:\n${result.error || JSON.stringify(result)}`);
     }
   } catch (err) {
     alert(`❌ Błąd: ${err.message}`);
   } finally {
     btn.disabled = false;
     btn.textContent = originalText;
+  }
+}
+
+async function pushChanges() {
+  const btn = $('#push-btn');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Push...';
+  
+  try {
+    const resp = await fetch('/api/git/push', { method: 'POST' });
+    const result = await resp.json();
+    
+    if (result.success) {
+      alert('✅ Wysłano zmiany');
+      btn.style.borderColor = ''; // Reset style if it was red
+      btn.textContent = 'Push';
+    } else {
+      alert(`❌ Błąd push:\n${result.error || JSON.stringify(result)}`);
+    }
+  } catch (err) {
+    alert(`❌ Błąd: ${err.message}`);
+  } finally {
+    btn.disabled = false;
+    if (btn.textContent !== 'Push') btn.textContent = originalText;
   }
 }
 

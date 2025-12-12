@@ -1,102 +1,162 @@
 # /odhacz — Interfejs do odhaczania zadań
 
-Szybki interfejs do przeglądania i odhaczania zadań z checkboxami.
+Webowy interfejs do przeglądania i odhaczania zadań. Działa lokalnie i na Railway.
 
-## Workflow
+---
 
-### Krok 1: Użytkownik mówi co chce zobaczyć
+## Tryb lokalny (development)
 
-Przykłady:
-- "Pokaż IKEA" → `lists/IKEA.md`
-- "Co mam na mieście" → `lists/Na mieście.md`
-- "Daily plan na dziś" → `daily plans/YYYY-MM-DD.md`
-- "Wszystko z projektów" → `projects/`
-- "IKEA i Leroy" → `lists/IKEA.md lists/Leroy\ Merlin.md`
-
-### Krok 2: Agent generuje dane
-
-Uruchom skrypt `generate.py` z odpowiednimi ścieżkami:
+### Uruchomienie
 
 ```bash
 cd /Users/higher/Documents/todo
-python3 .cursor/commands/odhacz/generate.py <ścieżki>
+python3 .cursor/commands/odhacz/server.py 9999
 ```
+
+W przeglądarce: `http://localhost:9999/`
+
+### Workflow
+
+1. **Filtruj** — wybierz folder (areas, lists, projects, daily plans)
+2. **Szukaj** — wyszukaj task po treści
+3. **Klikaj** checkboxy
+4. **Zapisz** — zmiany od razu w plikach lokalnych
+
+**Brak sync** — pracujesz bezpośrednio na lokalnych plikach.
+
+---
+
+## Tryb Railway (produkcja)
+
+### Deploy
+
+Zobacz: [RAILWAY.md](RAILWAY.md)
+
+### Użycie
+
+1. Otwórz: `https://twoja-app.railway.app/`
+2. Zaloguj się (basic auth)
+3. Filtruj, szukaj, odhaczaj jak w trybie lokalnym
+4. **Zapisz** → zmiany w lokalnym klonie na serwerze
+5. **🔄 Sync** → `git pull + push` do GitHub
+
+### Kiedy używać Sync
+
+- Po odhaczeniu wielu tasków
+- Przed zamknięciem przeglądarki
+- Gdy chcesz mieć backup na GitHub
+- Gdy pracujesz z wielu urządzeń
+
+**Sync status pokazuje:**
+- Ile czasu temu był ostatni sync
+- Czy są niezapisane zmiany (gwiazdka *)
+
+---
+
+## Filtry
+
+| Filtr | Wartości | Opis |
+|-------|----------|------|
+| Folder | areas, lists, projects, daily plans | Wybierz źródło |
+| Status | Wszystkie / Niezrobione / Zrobione | Stan checkboxów |
+| Szukaj | tekst | Szuka w treści tasków |
+
+---
+
+## API (dla agenta)
+
+### GET /api/tasks
+
+Parametry:
+- `?path=lists/` — filtruj po ścieżce
+- `?checked=false` — tylko niezrobione (true/false/all)
+- `?search=tekst` — szukaj
+
+Odpowiedź:
+```json
+{
+  "tasks": [
+    {"file": "lists/IKEA.md", "line": 3, "text": "- [ ] Task", "checked": false, "original_line": "..."}
+  ],
+  "folders": ["areas", "lists", "projects", "daily plans"],
+  "total": 42
+}
+```
+
+### POST /api/apply
+
+Body:
+```json
+{
+  "changes": [
+    {"file": "lists/IKEA.md", "line": 3, "original_line": "- [ ] Task", "checked": true}
+  ]
+}
+```
+
+Odpowiedź:
+```json
+{
+  "updated": [{"file": "lists/IKEA.md", "line": 3, "action": "odhaczone"}],
+  "errors": []
+}
+```
+
+### POST /api/sync (tylko Railway)
+
+Wykonuje `git pull + push`.
+
+Odpowiedź:
+```json
+{
+  "success": true,
+  "message": "Zsynchronizowane",
+  "details": {"pull": "...", "push": "..."}
+}
+```
+
+---
+
+## Dla agenta: jak używać /odhacz
+
+### Użytkownik mówi co chce zobaczyć
 
 Przykłady:
-```bash
-# Jeden plik
-python3 .cursor/commands/odhacz/generate.py lists/IKEA.md
+- "Pokaż IKEA"
+- "Co mam niezrobione w projektach"
+- "Daily plan na dziś"
 
-# Katalog (rekursywnie)
-python3 .cursor/commands/odhacz/generate.py "daily plans/"
+### Agent odpowiada
 
-# Wiele plików/katalogów
-python3 .cursor/commands/odhacz/generate.py lists/IKEA.md areas/Dom.md projects/
-
-# Glob pattern
-python3 .cursor/commands/odhacz/generate.py "lists/*.md"
+**Lokalnie:**
+```
+Uruchamiam serwer lokalny...
+Otwórz: http://localhost:9999/?path=lists/IKEA.md
 ```
 
-Skrypt wypisze ile zadań znalazł i wygeneruje `data.js`.
-
-### Krok 3: Upewnij się że serwer działa
-
-Jeśli nie działa, uruchom:
-```bash
-cd /Users/higher/Documents/todo/.cursor/commands/odhacz
-python3 -m http.server 9999 &
+**Railway:**
+```
+Otwórz: https://twoja-app.railway.app/?path=lists/IKEA.md
+Zaloguj się (użytkownik/hasło z Railway).
 ```
 
-### Krok 4: Otwórz UI w przeglądarce
+### Użytkownik pracuje
 
-```
-browser_navigate: http://localhost:9999/template.html
-```
+- Klika checkboxy
+- Zapisuje
+- (Railway) Syncuje gdy chce
 
-Powiedz użytkownikowi ile zadań jest wyświetlonych i z jakich plików.
+### Użytkownik kończy
 
-### Krok 5: Użytkownik klika checkboxy
+Mówi "zakończone" lub zamyka przeglądarkę. Koniec.
 
-Agent czeka. Użytkownik przegląda listę, klika co chce.
-
-### Krok 6: Użytkownik mówi "gotowe" / "zapisz"
-
-### Krok 7: Agent odczytuje stan i aktualizuje markdowny
-
-1. Zrób `browser_snapshot`
-2. Znajdź wszystkie elementy `.task[data-checked]`:
-   - Sprawdź atrybut `data-checked` ("1" = zaznaczony, "0" = niezaznaczony)
-   - Porównaj z oryginalnym stanem (w `data.js`)
-3. Dla zmienionych: edytuj odpowiedni plik markdown:
-   - `- [ ]` → `- [x]` (odhaczenie)
-   - `- [x]` → `- [ ]` (odznaczenie)
-4. Podsumuj co zostało zmienione
+---
 
 ## Pliki
 
-- `template.html` — statyczny UI (nie ruszać)
-- `ui.js` — logika renderowania (nie ruszać)  
-- `generate.py` — **skrypt generujący data.js**
-- `data.js` — dane (generowane przez skrypt)
-
-## Przykład sesji
-
-```
-Użytkownik: /odhacz pokaż mi listę IKEA i Na mieście
-
-Agent: [Uruchamia] python3 generate.py lists/IKEA.md "lists/Na mieście.md"
-Agent: [Output] ✓ lists/IKEA.md: 8 zadań
-              ✓ lists/Na mieście.md: 10 zadań
-              📄 Wygenerowano data.js: 18 zadań z 2 plików
-
-Agent: [Otwiera przeglądarkę]
-Agent: Masz 18 zadań z IKEA i Na mieście. Klikaj, jak skończysz powiedz "gotowe".
-
-Użytkownik: gotowe
-
-Agent: [Robi snapshot, parsuje zmiany]
-Agent: [Aktualizuje pliki]
-Agent: ✅ Zapisano zmiany:
-  - lists/IKEA.md L3: Szczotka do kibla → odhaczone
-  - lists/Na mieście.md L8: Odebrać pranie → odhaczone
-```
+- `server.py` — backend (API, git sync, auth)
+- `template.html` — UI
+- `ui.js` — logika frontendu
+- `Procfile` — Railway: jak uruchomić
+- `railway.toml` — Railway: konfiguracja volume
+- `RAILWAY.md` — instrukcja deploy

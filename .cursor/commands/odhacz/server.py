@@ -358,18 +358,28 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
 def main():
     # Railway: sklonuj repo jeśli nie istnieje
     if IS_RAILWAY:
-        if not (DATA_DIR / ".git").exists():
+        git_dir = DATA_DIR / ".git"
+        
+        if git_dir.exists():
+            print(f"✓ Repo już istnieje: {DATA_DIR}")
+            print("🔄 Pull...")
+            ok, out = git_pull()
+            if not ok:
+                print(f"⚠️  Pull warning: {out}")
+        else:
+            # Sprawdź czy DATA_DIR jest pusty
+            if DATA_DIR.exists() and any(DATA_DIR.iterdir()):
+                print(f"⚠️  {DATA_DIR} nie jest pusty, czyszczę...")
+                import shutil
+                shutil.rmtree(DATA_DIR)
+                DATA_DIR.mkdir(parents=True)
+            
             print(f"📦 Klonowanie {REPO_URL}...")
             ok, out = git_clone()
             if not ok:
                 print(f"❌ Błąd klonowania: {out}")
                 sys.exit(1)
             print(f"✓ Sklonowano do {DATA_DIR}")
-        else:
-            print(f"✓ Repo już istnieje: {DATA_DIR}")
-            # Pull przy starcie
-            print("🔄 Pull...")
-            git_pull()
     
     host = "0.0.0.0" if IS_RAILWAY else "127.0.0.1"
     

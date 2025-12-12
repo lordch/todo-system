@@ -2,39 +2,113 @@
 """
 Serwer /odhacz - markdowny jako baza danych.
 
-Endpointy:
-  GET  /api/tasks?path=...&checked=...&search=...  - lista tasków z filtrami
-  POST /api/apply                                   - zapisz zmiany
-  GET  /                                            - UI
+Działa lokalnie i na Railway z git sync.
 """
 
+import base64
 import json
+import os
 import re
+import subprocess
 import sys
 import urllib.parse
+from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent
-REPO_ROOT = SCRIPT_DIR.parents[2]
 CHECKBOX_RE = re.compile(r"^(\s*-\s*)\[([ xX])\](.*)$")
 
-# Zakres GTD (bez system/, mem-agent-mcp/, .cursor/)
-GTD_PATHS = [
-    "inbox.md",
-    "waiting-for.md",
-    "someday-maybe.md",
-    "areas",
-    "lists",
-    "projects",
-    "daily plans",
-]
+# Env vars
+PORT = int(os.environ.get("PORT", sys.argv[1] if len(sys.argv) > 1 else 9999))
+REPO_URL = os.environ.get("REPO_URL", "")
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+DATA_DIR = Path(os.environ.get("DATA_DIR", ""))
+AUTH_USER = os.environ.get("AUTH_USER", "")
+AUTH_PASS = os.environ.get("AUTH_PASS", "")
+
+# Tryb pracy
+IS_RAILWAY = bool(REPO_URL and DATA_DIR)
+REPO_ROOT = DATA_DIR if IS_RAILWAY else SCRIPT_DIR.parents[2]
+
+GTD_PATHS = ["inbox.md", "waiting-for.md", "someday-maybe.md", "areas", "lists", "projects", "daily plans"]
+
+# Stan sync
+last_sync = None
+pending_changes = False
+
+
+def git_exec(args: list, cwd: Path = None) -> tuple[bool, str]:
+    """Wykonuje komendę git. Zwraca (success, output)."""
+    try:
+        result = subprocess.run(
+            ["git"] + args,
+            cwd=str(cwd or REPO_ROOT),
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        return result.returncode == 0, result.stdout + result.stderr
+    except Exception as e:
+        return False, str(e)
+
+
+def git_clone():
+    """Klonuje repo do DATA_DIR."""
+    if not REPO_URL:
+        return False, "Brak REPO_URL"
+    
+    if DATA_DIR.exists() and (DATA_DIR / ".git").exists():
+        return True, "Repo już istnieje"
+    
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    
+    url = REPO_URL
+    if GITHUB_TOKEN:
+        url = REPO_URL.replace("https://", f"https://{GITHUB_TOKEN}@")
+    
+    ok, out = git_exec(["clone", url, str(DATA_DIR)])
+    return ok, out
+
+
+def git_pull():
+    """Pull zmian z GitHub."""
+    global last_sync
+    ok, out = git_exec(["pull", "--rebase"], REPO_ROOT)
+    if ok:
+        last_sync = datetime.now()
+    return ok, out
+
+
+def git_push():
+    """Push zmian do GitHub."""
+    global last_sync, pending_changes
+    
+    # Commit jeśli są zmiany
+    git_exec(["add", "."], REPO_ROOT)
+    ok, out = git_exec(["commit", "-m", f"odhacz: sync {datetime.now().isoformat()}"], REPO_ROOT)
+    
+    # Push
+    ok, out = git_exec(["push"], REPO_ROOT)
+    if ok:
+        last_sync = datetime.now()
+        pending_changes = False
+    return ok, out
+
+
+def git_sync():
+    """Pull + Push."""
+    pull_ok, pull_out = git_pull()
+    if not pull_ok and "CONFLICT" in pull_out:
+        return False, {"error": "conflict", "details": pull_out}
+    
+    push_ok, push_out = git_push()
+    return push_ok, {"pull": pull_out, "push": push_out}
 
 
 def scan_tasks(path_filter: str = "", checked_filter: str = "all", search: str = "") -> list:
     """Skanuje markdowny i zwraca listę tasków."""
     tasks = []
-    
     files_to_scan = []
     
     for gtd_path in GTD_PATHS:
@@ -47,7 +121,6 @@ def scan_tasks(path_filter: str = "", checked_filter: str = "all", search: str =
     for file_path in files_to_scan:
         file_rel = str(file_path.relative_to(REPO_ROOT))
         
-        # Filtr po ścieżce
         if path_filter and not file_rel.startswith(path_filter):
             continue
         
@@ -63,13 +136,11 @@ def scan_tasks(path_filter: str = "", checked_filter: str = "all", search: str =
             
             is_checked = m.group(2).lower() == "x"
             
-            # Filtr checked/unchecked
             if checked_filter == "true" and not is_checked:
                 continue
             if checked_filter == "false" and is_checked:
                 continue
             
-            # Filtr search
             if search and search.lower() not in line.lower():
                 continue
             
@@ -86,9 +157,9 @@ def scan_tasks(path_filter: str = "", checked_filter: str = "all", search: str =
 
 def apply_changes(changes: list) -> dict:
     """Aplikuje zmiany do plików."""
+    global pending_changes
     results = {"updated": [], "errors": []}
     
-    # Grupuj zmiany po pliku
     by_file = {}
     for ch in changes:
         file_rel = ch.get("file", "")
@@ -124,11 +195,7 @@ def apply_changes(changes: list) -> dict:
             current_line = lines[line_no - 1].rstrip('\n')
             
             if current_line != original_line:
-                results["errors"].append({
-                    "file": file_rel, 
-                    "line": line_no, 
-                    "error": f"Konflikt"
-                })
+                results["errors"].append({"file": file_rel, "line": line_no, "error": "Konflikt"})
                 continue
             
             m = CHECKBOX_RE.match(current_line)
@@ -152,6 +219,7 @@ def apply_changes(changes: list) -> dict:
         if modified:
             try:
                 file_path.write_text(''.join(lines), encoding="utf-8")
+                pending_changes = True
             except Exception as e:
                 results["errors"].append({"file": file_rel, "error": str(e)})
     
@@ -165,9 +233,6 @@ def get_folders() -> list:
         p = REPO_ROOT / gtd_path
         if p.is_dir():
             folders.add(gtd_path)
-            for sub in p.iterdir():
-                if sub.is_dir():
-                    folders.add(str(sub.relative_to(REPO_ROOT)))
     return sorted(folders)
 
 
@@ -175,7 +240,39 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(SCRIPT_DIR), **kwargs)
     
+    def check_auth(self) -> bool:
+        """Sprawdza basic auth (jeśli ustawione)."""
+        if not AUTH_USER or not AUTH_PASS:
+            return True
+        
+        auth_header = self.headers.get("Authorization", "")
+        if not auth_header.startswith("Basic "):
+            self.send_auth_required()
+            return False
+        
+        try:
+            encoded = auth_header[6:]
+            decoded = base64.b64decode(encoded).decode("utf-8")
+            user, pwd = decoded.split(":", 1)
+            if user == AUTH_USER and pwd == AUTH_PASS:
+                return True
+        except Exception:
+            pass
+        
+        self.send_auth_required()
+        return False
+    
+    def send_auth_required(self):
+        self.send_response(401)
+        self.send_header("WWW-Authenticate", 'Basic realm="odhacz"')
+        self.send_header("Content-Type", "text/plain")
+        self.end_headers()
+        self.wfile.write(b"401 Unauthorized")
+    
     def do_GET(self):
+        if not self.check_auth():
+            return
+        
         parsed = urllib.parse.urlparse(self.path)
         
         if parsed.path == "/api/tasks":
@@ -189,6 +286,15 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
             
             self.send_json({"tasks": tasks, "folders": folders, "total": len(tasks)})
         
+        elif parsed.path == "/api/sync/status":
+            status = {
+                "is_railway": IS_RAILWAY,
+                "last_sync": last_sync.isoformat() if last_sync else None,
+                "pending_changes": pending_changes,
+                "repo_url": REPO_URL if REPO_URL else None,
+            }
+            self.send_json(status)
+        
         elif parsed.path == "/" or parsed.path == "/index.html":
             self.path = "/template.html"
             super().do_GET()
@@ -197,6 +303,9 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
             super().do_GET()
     
     def do_POST(self):
+        if not self.check_auth():
+            return
+        
         if self.path == "/api/apply":
             content_length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(content_length).decode("utf-8")
@@ -210,6 +319,18 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
             
             result = apply_changes(changes)
             self.send_json(result)
+        
+        elif self.path == "/api/sync":
+            if not IS_RAILWAY:
+                self.send_json({"error": "Sync available only on Railway"}, status=400)
+                return
+            
+            ok, result = git_sync()
+            if ok:
+                self.send_json({"success": True, "message": "Zsynchronizowane", "details": result})
+            else:
+                self.send_json({"success": False, "error": result}, status=409)
+        
         else:
             self.send_json({"error": "Not Found"}, status=404)
     
@@ -217,7 +338,7 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
         self.end_headers()
     
     def send_json(self, data, status=200):
@@ -230,19 +351,37 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
         self.wfile.write(body)
     
     def log_message(self, format, *args):
-        if "/api/" in args[0]:
-            print(f"[API] {args[0]}")
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        print(f"[{timestamp}] {args[0]}")
 
 
 def main():
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 9999
+    # Railway: sklonuj repo jeśli nie istnieje
+    if IS_RAILWAY:
+        if not (DATA_DIR / ".git").exists():
+            print(f"📦 Klonowanie {REPO_URL}...")
+            ok, out = git_clone()
+            if not ok:
+                print(f"❌ Błąd klonowania: {out}")
+                sys.exit(1)
+            print(f"✓ Sklonowano do {DATA_DIR}")
+        else:
+            print(f"✓ Repo już istnieje: {DATA_DIR}")
+            # Pull przy starcie
+            print("🔄 Pull...")
+            git_pull()
     
-    print(f"🚀 Odhacz: http://localhost:{port}/")
-    print(f"📁 Root: {REPO_ROOT}")
-    print(f"📂 Foldery: {', '.join(GTD_PATHS)}")
-    print("Ctrl+C aby zatrzymać\n")
+    host = "0.0.0.0" if IS_RAILWAY else "127.0.0.1"
     
-    httpd = HTTPServer(("127.0.0.1", port), OdhaczHandler)
+    print(f"\n🚀 Odhacz server")
+    print(f"   URL: http://{host}:{PORT}/")
+    print(f"   Root: {REPO_ROOT}")
+    print(f"   Mode: {'Railway' if IS_RAILWAY else 'Local'}")
+    print(f"   Auth: {'✓' if AUTH_USER else '✗'}")
+    print(f"   Sync: {'✓' if IS_RAILWAY else '✗'}")
+    print(f"\nCtrl+C aby zatrzymać\n")
+    
+    httpd = HTTPServer((host, PORT), OdhaczHandler)
     httpd.serve_forever()
 
 

@@ -15,6 +15,7 @@ const searchInput = $('#search');
 // Init
 async function init() {
   await loadTasks();
+  await checkSyncStatus();
   
   folderFilter.addEventListener('change', loadTasks);
   checkedFilter.addEventListener('change', loadTasks);
@@ -24,6 +25,46 @@ async function init() {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(loadTasks, 300);
   });
+}
+
+async function checkSyncStatus() {
+  try {
+    const resp = await fetch('/api/sync/status');
+    const data = await resp.json();
+    
+    if (data.is_railway) {
+      const syncBtn = $('#sync-btn');
+      const syncStatus = $('#sync-status');
+      
+      syncBtn.style.display = 'inline-block';
+      syncStatus.style.display = 'inline';
+      
+      if (data.last_sync) {
+        const ago = timeSince(new Date(data.last_sync));
+        syncStatus.textContent = ` · Sync: ${ago} temu`;
+      } else {
+        syncStatus.textContent = ' · Sync: nigdy';
+      }
+      
+      if (data.pending_changes) {
+        syncBtn.textContent = '🔄 Sync *';
+        syncBtn.style.background = '#e94560';
+      }
+    }
+  } catch (err) {
+    console.log('Sync status unavailable');
+  }
+}
+
+function timeSince(date) {
+  const seconds = Math.floor((new Date() - date) / 1000);
+  if (seconds < 60) return `${seconds}s`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}min`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`;
+  const days = Math.floor(hours / 24);
+  return `${days}d`;
 }
 
 // Load tasks from API
@@ -222,4 +263,30 @@ async function saveChanges() {
   }
 }
 
+async function syncGitHub() {
+  const btn = $('#sync-btn');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Syncuję...';
+  
+  try {
+    const resp = await fetch('/api/sync', { method: 'POST' });
+    const result = await resp.json();
+    
+    if (result.success) {
+      alert('✅ Zsynchronizowane z GitHub');
+      await checkSyncStatus();
+      await loadTasks();
+    } else {
+      alert(`❌ Błąd sync:\n${result.error || JSON.stringify(result)}`);
+    }
+  } catch (err) {
+    alert(`❌ Błąd: ${err.message}`);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
 init();
+

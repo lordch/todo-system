@@ -174,11 +174,13 @@
     <div class="actions">
       <button id="refresh-btn" onclick="loadTasks()">Odśwież</button>
       <button id="save-btn" onclick="saveChanges()" disabled>Zapisz</button>
+      <button id="sync-btn" onclick="syncGitHub()" style="display:none">🔄 Sync</button>
     </div>
     <div class="stats">
       Wszystkie: <span id="total">0</span> · 
       Pokazane: <span id="shown">0</span> · 
       Zmiany: <span id="changes" class="changed">0</span>
+      <span id="sync-status" style="display:none"></span>
     </div>
   </header>
   

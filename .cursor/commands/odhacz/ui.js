@@ -34,6 +34,7 @@ async function init() {
       const text = (e.clipboardData || window.clipboardData)?.getData('text/plain') || '';
       document.execCommand('insertText', false, text);
     });
+    rtEditor.addEventListener('keydown', onRtEditorKeydown);
   }
 
   await loadTasks();
@@ -760,6 +761,11 @@ function rtCmd(cmd) {
   if (!editor) return;
   editor.focus();
 
+  if (cmd === 'task') {
+    insertTaskAtCursor();
+    return;
+  }
+
   if (cmd === 'code') {
     const sel = window.getSelection();
     const text = sel && sel.toString ? sel.toString() : '';
@@ -782,6 +788,113 @@ function rtCmd(cmd) {
   }
 
   document.execCommand(cmd);
+}
+
+function onRtEditorKeydown(e) {
+  if (e.key !== 'Enter' || e.shiftKey) return;
+  const editor = $('#rt-editor');
+  if (!editor) return;
+  if (!editor.contains(document.activeElement) && document.activeElement !== editor) return;
+
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+  const range = sel.getRangeAt(0);
+  const container = range.startContainer;
+  const li = closestElement(container, 'li');
+  if (!li) return;
+  const ul = li.closest('ul');
+  if (!ul) return;
+  const hasCheckbox = !!li.querySelector('input.rt-checkbox[type="checkbox"]');
+  if (!hasCheckbox) return;
+
+  e.preventDefault();
+
+  const span = li.querySelector('span');
+  const text = (span?.textContent || '').replace(/\u00a0/g, ' ').trim();
+
+  if (!text) {
+    const after = document.createElement('div');
+    after.appendChild(document.createElement('br'));
+    const parentUl = ul.parentNode;
+    const next = ul.nextSibling;
+
+    li.remove();
+    if (!ul.querySelector('li')) ul.remove();
+
+    if (parentUl) {
+      parentUl.insertBefore(after, next);
+      placeCaretAtStart(after);
+    }
+    return;
+  }
+
+  const newLi = createTaskLi(false, '');
+  li.insertAdjacentElement('afterend', newLi);
+  placeCaretInTaskText(newLi);
+}
+
+function insertTaskAtCursor() {
+  const editor = $('#rt-editor');
+  if (!editor) return;
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+  const range = sel.getRangeAt(0);
+  const container = range.startContainer;
+
+  const li = closestElement(container, 'li');
+  if (li && li.closest('ul')) {
+    const newLi = createTaskLi(false, '');
+    li.insertAdjacentElement('afterend', newLi);
+    placeCaretInTaskText(newLi);
+    return;
+  }
+
+  const ul = document.createElement('ul');
+  ul.appendChild(createTaskLi(false, ''));
+  range.deleteContents();
+  range.insertNode(ul);
+  placeCaretInTaskText(ul.querySelector('li'));
+}
+
+function createTaskLi(checked, text) {
+  const li = document.createElement('li');
+  li.className = 'rt-li';
+  const cb = document.createElement('input');
+  cb.className = 'rt-checkbox';
+  cb.type = 'checkbox';
+  cb.checked = !!checked;
+  cb.setAttribute('contenteditable', 'false');
+  cb.tabIndex = -1;
+  const span = document.createElement('span');
+  span.textContent = text || '';
+  li.appendChild(cb);
+  li.appendChild(span);
+  return li;
+}
+
+function placeCaretInTaskText(li) {
+  const span = li?.querySelector('span');
+  if (!span) return;
+  placeCaretAtStart(span);
+}
+
+function placeCaretAtStart(el) {
+  const sel = window.getSelection();
+  if (!sel) return;
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  range.collapse(true);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+function closestElement(node, selector) {
+  let n = node;
+  while (n) {
+    if (n.nodeType === Node.ELEMENT_NODE && n.matches(selector)) return n;
+    n = n.parentNode;
+  }
+  return null;
 }
 
 // Keyboard shortcuts

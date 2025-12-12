@@ -307,9 +307,10 @@
     
     .modal-content {
       flex: 1;
-      overflow: hidden;
+      overflow: auto;
       display: flex;
       flex-direction: column;
+      min-height: 0;
     }
     
     .tab-panel {
@@ -344,7 +345,9 @@
     #rt-editor {
       padding: 1rem 1.25rem;
       outline: none;
-      min-height: 100%;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
     }
     #rt-editor:empty::before {
       content: "Zacznij pisać…";
@@ -455,6 +458,7 @@
           <button type="button" onclick="rtCmd('h1')">H1</button>
           <button type="button" onclick="rtCmd('h2')">H2</button>
           <button type="button" onclick="rtCmd('ul')">• lista</button>
+          <button type="button" onclick="rtCmd('task')">☐ task</button>
         </div>
         <div id="rt-editor" contenteditable="false"></div>
       </div>

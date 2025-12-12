@@ -368,12 +368,34 @@ def main():
                 print(f"⚠️  Pull warning: {out}")
         else:
             # Sprawdź czy DATA_DIR jest pusty
-            if DATA_DIR.exists() and any(DATA_DIR.iterdir()):
-                print(f"⚠️  {DATA_DIR} nie jest pusty, czyszczę...")
-                import shutil
-                shutil.rmtree(DATA_DIR)
-                DATA_DIR.mkdir(parents=True)
+            if DATA_DIR.exists():
+                try:
+                    files = list(DATA_DIR.iterdir())
+                    if files:
+                        print(f"⚠️  {DATA_DIR} ma {len(files)} plików, próbuję sklonować do podkatalogu...")
+                        # Klonuj do repo/ w DATA_DIR jeśli katalog nie jest pusty
+                        clone_target = DATA_DIR / "repo"
+                        if not clone_target.exists():
+                            print(f"📦 Klonowanie {REPO_URL} do {clone_target}...")
+                            url = REPO_URL
+                            if GITHUB_TOKEN:
+                                url = REPO_URL.replace("https://", f"https://{GITHUB_TOKEN}@")
+                            ok, out = git_exec(["clone", url, str(clone_target)])
+                            if ok:
+                                global REPO_ROOT
+                                REPO_ROOT = clone_target
+                                print(f"✓ Sklonowano do {clone_target}")
+                            else:
+                                print(f"❌ Błąd: {out}")
+                                sys.exit(1)
+                        else:
+                            REPO_ROOT = clone_target
+                            print(f"✓ Używam {clone_target}")
+                        return
+                except Exception as e:
+                    print(f"⚠️  Błąd: {e}")
             
+            DATA_DIR.mkdir(parents=True, exist_ok=True)
             print(f"📦 Klonowanie {REPO_URL}...")
             ok, out = git_clone()
             if not ok:

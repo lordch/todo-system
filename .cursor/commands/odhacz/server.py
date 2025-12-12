@@ -101,6 +101,16 @@ def git_push():
     return ok, out
 
 
+def git_commit_and_push():
+    """Commit + Push."""
+    # 1. Commit
+    git_exec(["add", "."], REPO_ROOT)
+    git_exec(["commit", "-m", f"odhacz: push {datetime.now().isoformat()}"], REPO_ROOT)
+    
+    # 2. Push
+    return git_push()
+
+
 def git_sync():
     """Pull + Push z obsługą uncommitted changes."""
     # 1. Commit wszystkie lokalne zmiany
@@ -479,6 +489,28 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
                 self.send_json({"success": True, "message": "Zsynchronizowane", "details": result})
             else:
                 self.send_json({"success": False, "error": result}, status=409)
+
+        elif self.path == "/api/git/pull":
+            if not IS_RAILWAY:
+                self.send_json({"error": "Sync available only on Railway"}, status=400)
+                return
+            
+            ok, out = git_pull()
+            if ok:
+                self.send_json({"success": True, "message": "Pobrano zmiany", "details": out})
+            else:
+                self.send_json({"success": False, "error": out}, status=500)
+
+        elif self.path == "/api/git/push":
+            if not IS_RAILWAY:
+                self.send_json({"error": "Sync available only on Railway"}, status=400)
+                return
+            
+            ok, out = git_commit_and_push()
+            if ok:
+                self.send_json({"success": True, "message": "Wysłano zmiany", "details": out})
+            else:
+                self.send_json({"success": False, "error": out}, status=500)
         
         else:
             self.send_json({"error": "Not Found"}, status=404)

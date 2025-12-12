@@ -1,14 +1,14 @@
 # 🏠 Mieszkanie Pegaza - piątek
 
-Zadania do wykonania podczas wizyty w piątek 2025-12-05.
+Zadania do wykonania podczas najbliższej wizyty (opcjonalnie: sobota 2025-12-13).
 
 ## Do zabrania
 - [ ] Pranie
 - [ ] Lampka Miki
 - [ ] Moja lampka biurkowa?
-- [ ] Przedłużacz e
+- [ ] Przedłużacz
 - [ ] Szafka na buty
-- [ ] Materace (raczej nie w piątek)
+- [ ] Materace (raczej nie teraz)
 
 ## Do zrobienia
 - [ ] Rozłożyć w mieszkaniu rzeczy z balkonu

@@ -99,12 +99,54 @@
       color: #e94560;
       cursor: pointer;
       user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     .file-group h2:hover { background: #0a2540; }
     
+    .file-group h2 .add-task-btn {
+      background: #e94560;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+    .file-group h2 .add-task-btn:hover { opacity: 1; }
+    
+    .add-task-form {
+      padding: 0.75rem 1rem;
+      background: #1a2744;
+      border-bottom: 1px solid #0f3460;
+      display: none;
+    }
+    .add-task-form.active { display: flex; }
+    .add-task-form input {
+      flex: 1;
+      padding: 0.5rem;
+      background: #16213e;
+      border: 1px solid #0f3460;
+      color: #eee;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+    .add-task-form button {
+      margin-left: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #e94560;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .add-task-form button:hover { background: #d63850; }
+    
     .file-group.collapsed .tasks { display: none; }
-    .file-group h2::before { content: "▼ "; font-size: 0.7rem; }
-    .file-group.collapsed h2::before { content: "▶ "; }
+    .file-group h2 .filename::before { content: "▼ "; font-size: 0.7rem; }
+    .file-group.collapsed h2 .filename::before { content: "▶ "; }
     
     .task {
       display: flex;

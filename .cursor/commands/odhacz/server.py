@@ -311,7 +311,44 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
         if not self.check_auth():
             return
         
-        if self.path == "/api/apply":
+        if self.path == "/api/add-task":
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length).decode("utf-8")
+            
+            try:
+                data = json.loads(body)
+                file_rel = data.get("file", "")
+                task_text = data.get("text", "").strip()
+            except json.JSONDecodeError:
+                self.send_json({"error": "Invalid JSON"}, status=400)
+                return
+            
+            if not file_rel or not task_text:
+                self.send_json({"error": "Missing file or text"}, status=400)
+                return
+            
+            file_path = REPO_ROOT / file_rel
+            
+            if not file_path.is_file():
+                self.send_json({"error": "Plik nie istnieje"}, status=404)
+                return
+            
+            try:
+                content = file_path.read_text(encoding="utf-8")
+                # Dodaj task na końcu pliku
+                new_task = f"- [ ] {task_text}\n"
+                if not content.endswith('\n'):
+                    new_task = '\n' + new_task
+                file_path.write_text(content + new_task, encoding="utf-8")
+                
+                global pending_changes
+                pending_changes = True
+                
+                self.send_json({"success": True, "file": file_rel, "text": task_text})
+            except Exception as e:
+                self.send_json({"error": str(e)}, status=500)
+        
+        elif self.path == "/api/apply":
             content_length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(content_length).decode("utf-8")
             

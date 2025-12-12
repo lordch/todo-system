@@ -146,9 +146,32 @@ function render() {
     group.className = 'file-group';
     
     const header = document.createElement('h2');
-    header.textContent = file;
-    header.onclick = () => group.classList.toggle('collapsed');
+    
+    const filename = document.createElement('span');
+    filename.className = 'filename';
+    filename.textContent = file;
+    filename.onclick = () => group.classList.toggle('collapsed');
+    
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-task-btn';
+    addBtn.textContent = '+';
+    addBtn.onclick = (e) => {
+      e.stopPropagation();
+      toggleAddTaskForm(group, file);
+    };
+    
+    header.appendChild(filename);
+    header.appendChild(addBtn);
     group.appendChild(header);
+    
+    // Formularz dodawania taska
+    const form = document.createElement('div');
+    form.className = 'add-task-form';
+    form.innerHTML = `
+      <input type="text" placeholder="Nowy task..." class="new-task-input">
+      <button onclick="addTask('${file}', this)">Dodaj</button>
+    `;
+    group.appendChild(form);
     
     const tasksDiv = document.createElement('div');
     tasksDiv.className = 'tasks';
@@ -288,5 +311,59 @@ async function syncGitHub() {
   }
 }
 
+function toggleAddTaskForm(group, file) {
+  const form = group.querySelector('.add-task-form');
+  const isActive = form.classList.contains('active');
+  
+  // Zamknij wszystkie inne formularze
+  document.querySelectorAll('.add-task-form.active').forEach(f => f.classList.remove('active'));
+  
+  if (!isActive) {
+    form.classList.add('active');
+    const input = form.querySelector('.new-task-input');
+    input.focus();
+    input.value = '';
+  }
+}
+
+async function addTask(file, button) {
+  const form = button.parentElement;
+  const input = form.querySelector('.new-task-input');
+  const text = input.value.trim();
+  
+  if (!text) {
+    alert('Wpisz treść zadania');
+    return;
+  }
+  
+  button.disabled = true;
+  button.textContent = 'Dodaję...';
+  
+  try {
+    const resp = await fetch('/api/add-task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file, text })
+    });
+    
+    const result = await resp.json();
+    
+    if (result.success) {
+      input.value = '';
+      form.classList.remove('active');
+      await loadTasks();
+      alert(`✅ Dodano: ${text}`);
+    } else {
+      alert(`❌ Błąd: ${result.error}`);
+    }
+  } catch (err) {
+    alert(`❌ Błąd: ${err.message}`);
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Dodaj';
+  }
+}
+
 init();
+
 

@@ -19,8 +19,21 @@ const searchInput = $('#search');
 
 // Init
 async function init() {
-  $('#pull-btn').addEventListener('click', pullChanges);
-  $('#push-btn').addEventListener('click', pushChanges);
+  const pullBtn = $('#pull-btn');
+  const pushBtn = $('#push-btn');
+  const syncBtn = $('#sync-btn');
+  const rtEditor = $('#rt-editor');
+
+  if (pullBtn) pullBtn.addEventListener('click', pullChanges);
+  if (pushBtn) pushBtn.addEventListener('click', pushChanges);
+  if (syncBtn) syncBtn.addEventListener('click', syncGitHub);
+  if (rtEditor) {
+    rtEditor.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData)?.getData('text/plain') || '';
+      document.execCommand('insertText', false, text);
+    });
+  }
 
   await loadTasks();
   await checkSyncStatus();
@@ -41,13 +54,23 @@ async function checkSyncStatus() {
     const data = await resp.json();
     
     if (data.is_railway) {
-      $('#pull-btn').style.display = 'inline-block';
-      $('#push-btn').style.display = 'inline-block';
+      const pullBtn = $('#pull-btn');
+      const pushBtn = $('#push-btn');
+      const syncBtn = $('#sync-btn');
+
+      if (pullBtn) pullBtn.style.display = 'inline-block';
+      if (pushBtn) pushBtn.style.display = 'inline-block';
+      if (syncBtn) syncBtn.style.display = 'inline-block';
       
       if (data.pending_changes) {
-        const pushBtn = $('#push-btn');
-        pushBtn.textContent = 'Push *';
-        pushBtn.style.borderColor = '#e94560';
+        if (pushBtn) {
+          pushBtn.textContent = 'Push *';
+          pushBtn.style.borderColor = '#e94560';
+        }
+        if (syncBtn) {
+          syncBtn.textContent = '🔄 Sync *';
+          syncBtn.style.borderColor = '#e94560';
+        }
       }
     }
   } catch (err) {
@@ -353,6 +376,7 @@ async function pullChanges() {
 
 async function pushChanges() {
   const btn = $('#push-btn');
+  if (!btn) return;
   const originalText = btn.textContent;
   btn.disabled = true;
   btn.textContent = 'Push...';
@@ -373,6 +397,33 @@ async function pushChanges() {
   } finally {
     btn.disabled = false;
     if (btn.textContent !== 'Push') btn.textContent = originalText;
+  }
+}
+
+async function syncGitHub() {
+  const btn = $('#sync-btn');
+  if (!btn) return;
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '🔄 Sync...';
+
+  try {
+    const resp = await fetch('/api/sync', { method: 'POST' });
+    const result = await resp.json();
+
+    if (result.success) {
+      alert('✅ Zsynchronizowane');
+      btn.style.borderColor = '';
+      btn.textContent = '🔄 Sync';
+      await loadTasks();
+    } else {
+      alert(`❌ Błąd sync:\n${result.error || JSON.stringify(result)}`);
+    }
+  } catch (err) {
+    alert(`❌ Błąd: ${err.message}`);
+  } finally {
+    btn.disabled = false;
+    if (btn.textContent !== '🔄 Sync') btn.textContent = originalText;
   }
 }
 
@@ -438,6 +489,7 @@ async function openFileEditor(file) {
   title.textContent = `Edycja: ${file}`;
   textarea.value = 'Ładowanie...';
   modal.classList.add('active');
+  document.body.classList.add('modal-open');
   
   try {
     const resp = await fetch(`/api/file?path=${encodeURIComponent(file)}`);
@@ -464,10 +516,16 @@ async function openFileEditor(file) {
 function closeEditor() {
   const modal = $('#editor-modal');
   modal.classList.remove('active');
+  document.body.classList.remove('modal-open');
   state.editor = { file: null, content: null, hash: null };
 }
 
 function switchTab(tab) {
+  // If leaving preview, persist changes back to textarea
+  if ($('#preview-panel')?.classList.contains('active')) {
+    syncFromRichText();
+  }
+
   document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   
@@ -483,6 +541,9 @@ function switchTab(tab) {
 
 async function saveFile() {
   const file = state.editor.file;
+  if ($('#preview-panel')?.classList.contains('active')) {
+    syncFromRichText();
+  }
   const content = $('#editor-textarea').value;
   const hash = state.editor.hash;
   
@@ -518,25 +579,200 @@ async function saveFile() {
 
 function renderPreview() {
   const content = $('#editor-textarea').value;
-  const preview = $('#preview-panel');
-  
-  // Prosty rendering (bez external lib)
-  let html = content
+  const editor = $('#rt-editor');
+  if (!editor) return;
+  editor.innerHTML = markdownToHtml(content);
+}
+
+function escapeHtml(s) {
+  return s
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^- \[ \] (.+)$/gm, '<li>☐ $1</li>')
-    .replace(/^- \[x\] (.+)$/gm, '<li>☑ $1</li>')
-    .replace(/^- (.+)$/gm, '<li>$1</li>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/`(.+?)`/g, '<code>$1</code>')
-    .replace(/\n\n/g, '<br><br>');
-  
-  preview.innerHTML = html;
+    .replace(/>/g, '&gt;');
+}
+
+function renderInline(md) {
+  let s = escapeHtml(md);
+  s = s.replace(/`([^`]+?)`/g, '<code>$1</code>');
+  s = s.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*([^*]+?)\*/g, '<em>$1</em>');
+  return s;
+}
+
+function markdownToHtml(md) {
+  const lines = (md || '').replace(/\r\n/g, '\n').split('\n');
+  const out = [];
+  let inUl = false;
+
+  const closeUl = () => {
+    if (inUl) {
+      out.push('</ul>');
+      inUl = false;
+    }
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.replace(/\s+$/g, '');
+    if (!line.trim()) {
+      closeUl();
+      out.push('<br>');
+      continue;
+    }
+
+    const h = line.match(/^(#{1,3})\s+(.*)$/);
+    if (h) {
+      closeUl();
+      const level = h[1].length;
+      out.push(`<h${level}>${renderInline(h[2])}</h${level}>`);
+      continue;
+    }
+
+    const cb = line.match(/^\s*-\s*\[([ xX])\]\s+(.*)$/);
+    if (cb) {
+      if (!inUl) {
+        out.push('<ul>');
+        inUl = true;
+      }
+      const checked = cb[1].toLowerCase() === 'x';
+      out.push(
+        `<li class="rt-li"><input class="rt-checkbox" type="checkbox" ${checked ? 'checked' : ''} contenteditable="false" tabindex="-1"><span>${renderInline(cb[2])}</span></li>`
+      );
+      continue;
+    }
+
+    const li = line.match(/^\s*-\s+(.*)$/);
+    if (li) {
+      if (!inUl) {
+        out.push('<ul>');
+        inUl = true;
+      }
+      out.push(`<li>${renderInline(li[1])}</li>`);
+      continue;
+    }
+
+    closeUl();
+    out.push(`<div>${renderInline(line)}</div>`);
+  }
+
+  closeUl();
+  return out.join('\n');
+}
+
+function htmlToMarkdown(rootEl) {
+  const blocks = [];
+
+  const inlineToMd = (el) => {
+    const parts = [];
+    el.childNodes.forEach((n) => {
+      if (n.nodeType === Node.TEXT_NODE) {
+        parts.push(n.nodeValue || '');
+        return;
+      }
+      if (n.nodeType !== Node.ELEMENT_NODE) return;
+      const tag = n.tagName.toLowerCase();
+      if (tag === 'strong' || tag === 'b') {
+        parts.push(`**${inlineToMd(n)}**`);
+      } else if (tag === 'em' || tag === 'i') {
+        parts.push(`*${inlineToMd(n)}*`);
+      } else if (tag === 'code') {
+        parts.push('`' + (n.textContent || '').replace(/`/g, '') + '`');
+      } else if (tag === 'br') {
+        parts.push('\n');
+      } else {
+        parts.push(inlineToMd(n));
+      }
+    });
+    return parts.join('');
+  };
+
+  const walkBlocks = (el) => {
+    el.childNodes.forEach((n) => {
+      if (n.nodeType === Node.TEXT_NODE) {
+        const t = (n.nodeValue || '').trim();
+        if (t) blocks.push(t);
+        return;
+      }
+      if (n.nodeType !== Node.ELEMENT_NODE) return;
+      const tag = n.tagName.toLowerCase();
+
+      if (tag === 'h1' || tag === 'h2' || tag === 'h3') {
+        const level = tag === 'h1' ? '#' : tag === 'h2' ? '##' : '###';
+        blocks.push(`${level} ${inlineToMd(n).trim()}`);
+        blocks.push('');
+        return;
+      }
+
+      if (tag === 'ul') {
+        n.querySelectorAll(':scope > li').forEach((li) => {
+          const cb = li.querySelector('input.rt-checkbox[type="checkbox"]');
+          const text = inlineToMd(li).replace(/\n+/g, ' ').trim();
+          if (cb) {
+            blocks.push(`- [${cb.checked ? 'x' : ' '}] ${text}`);
+          } else {
+            blocks.push(`- ${text}`);
+          }
+        });
+        blocks.push('');
+        return;
+      }
+
+      if (tag === 'div' || tag === 'p') {
+        const t = inlineToMd(n).trim();
+        if (t) blocks.push(t);
+        return;
+      }
+
+      if (tag === 'br') {
+        blocks.push('');
+        return;
+      }
+
+      walkBlocks(n);
+    });
+  };
+
+  walkBlocks(rootEl);
+
+  return blocks
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trimEnd() + '\n';
+}
+
+function syncFromRichText() {
+  const editor = $('#rt-editor');
+  const textarea = $('#editor-textarea');
+  if (!editor || !textarea) return;
+  textarea.value = htmlToMarkdown(editor);
+}
+
+function rtCmd(cmd) {
+  const editor = $('#rt-editor');
+  if (!editor) return;
+  editor.focus();
+
+  if (cmd === 'code') {
+    const sel = window.getSelection();
+    const text = sel && sel.toString ? sel.toString() : '';
+    if (text) {
+      document.execCommand('insertHTML', false, `<code>${escapeHtml(text)}</code>`);
+    } else {
+      document.execCommand('insertHTML', false, '<code></code>');
+    }
+    return;
+  }
+
+  if (cmd === 'h1' || cmd === 'h2') {
+    document.execCommand('formatBlock', false, cmd === 'h1' ? 'H1' : 'H2');
+    return;
+  }
+
+  if (cmd === 'ul') {
+    document.execCommand('insertUnorderedList');
+    return;
+  }
+
+  document.execCommand(cmd);
 }
 
 // Keyboard shortcuts

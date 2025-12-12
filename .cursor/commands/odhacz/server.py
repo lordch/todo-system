@@ -334,6 +334,34 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
             }
             self.send_json(status)
         
+        elif parsed.path == "/api/file":
+            params = urllib.parse.parse_qs(parsed.query)
+            file_rel = params.get("path", [""])[0]
+            
+            if not file_rel:
+                self.send_json({"error": "Missing path parameter"}, status=400)
+                return
+            
+            file_path = REPO_ROOT / file_rel
+            
+            if not file_path.is_file():
+                self.send_json({"error": "Plik nie istnieje"}, status=404)
+                return
+            
+            try:
+                content = file_path.read_text(encoding="utf-8")
+                import hashlib
+                content_hash = hashlib.sha256(content.encode()).hexdigest()[:16]
+                
+                self.send_json({
+                    "file": file_rel,
+                    "content": content,
+                    "lines": len(content.splitlines()),
+                    "hash": content_hash
+                })
+            except Exception as e:
+                self.send_json({"error": str(e)}, status=500)
+        
         elif parsed.path == "/" or parsed.path == "/index.html":
             self.path = "/template.html"
             super().do_GET()
@@ -342,6 +370,8 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
             super().do_GET()
     
     def do_POST(self):
+        global pending_changes
+        
         if not self.check_auth():
             return
         
@@ -374,8 +404,6 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
                 if not content.endswith('\n'):
                     new_task = '\n' + new_task
                 file_path.write_text(content + new_task, encoding="utf-8")
-                
-                global pending_changes
                 pending_changes = True
                 
                 self.send_json({"success": True, "file": file_rel, "text": task_text})
@@ -395,6 +423,51 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
             
             result = apply_changes(changes)
             self.send_json(result)
+        
+        elif self.path == "/api/file":
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length).decode("utf-8")
+            
+            try:
+                data = json.loads(body)
+                file_rel = data.get("file", "")
+                new_content = data.get("content", "")
+                original_hash = data.get("original_hash", "")
+            except json.JSONDecodeError:
+                self.send_json({"error": "Invalid JSON"}, status=400)
+                return
+            
+            if not file_rel:
+                self.send_json({"error": "Missing file"}, status=400)
+                return
+            
+            file_path = REPO_ROOT / file_rel
+            
+            if not file_path.is_file():
+                self.send_json({"error": "Plik nie istnieje"}, status=404)
+                return
+            
+            try:
+                # Sprawdź hash (optimistic locking)
+                current_content = file_path.read_text(encoding="utf-8")
+                import hashlib
+                current_hash = hashlib.sha256(current_content.encode()).hexdigest()[:16]
+                
+                if original_hash and current_hash != original_hash:
+                    self.send_json({"error": "Konflikt - plik został zmieniony"}, status=409)
+                    return
+                
+                # Zapisz nową treść
+                file_path.write_text(new_content, encoding="utf-8")
+                pending_changes = True
+                
+                self.send_json({
+                    "success": True,
+                    "file": file_rel,
+                    "lines": len(new_content.splitlines())
+                })
+            except Exception as e:
+                self.send_json({"error": str(e)}, status=500)
         
         elif self.path == "/api/sync":
             if not IS_RAILWAY:

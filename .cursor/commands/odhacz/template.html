@@ -214,6 +214,153 @@
     }
     
     #loading { color: #e94560; }
+    
+    /* Modal Editor */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+    
+    .modal {
+      background: #16213e;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 1200px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    
+    .modal-header {
+      padding: 1rem 1.5rem;
+      background: #0f3460;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .modal-header h3 {
+      font-size: 1rem;
+      color: #e94560;
+      margin: 0;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      width: 2rem;
+      height: 2rem;
+    }
+    .modal-close:hover { color: #eee; }
+    
+    .modal-tabs {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid #0f3460;
+    }
+    
+    .modal-tab {
+      padding: 0.5rem 1rem;
+      background: none;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      border-radius: 4px;
+    }
+    .modal-tab.active {
+      background: #0f3460;
+      color: #e94560;
+    }
+    .modal-tab:hover { color: #eee; }
+    
+    .modal-content {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .tab-panel {
+      display: none;
+      flex: 1;
+      overflow: auto;
+      padding: 1.5rem;
+    }
+    .tab-panel.active { display: flex; flex-direction: column; }
+    
+    #editor-textarea {
+      flex: 1;
+      width: 100%;
+      padding: 1rem;
+      background: #1a1a2e;
+      color: #eee;
+      border: 1px solid #0f3460;
+      border-radius: 4px;
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      resize: none;
+    }
+    #editor-textarea:focus { outline: none; border-color: #e94560; }
+    
+    #preview-panel {
+      background: #1a1a2e;
+      padding: 1.5rem;
+      border-radius: 4px;
+      overflow: auto;
+      line-height: 1.6;
+    }
+    #preview-panel h1, #preview-panel h2, #preview-panel h3 { 
+      color: #e94560; 
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    #preview-panel ul { margin-left: 1.5rem; }
+    #preview-panel code { 
+      background: #0f3460; 
+      padding: 0.2rem 0.4rem; 
+      border-radius: 3px; 
+    }
+    
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #0f3460;
+      display: flex;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+    
+    .file-group h2 .edit-btn {
+      background: #0f3460;
+      color: #aaa;
+      border: none;
+      border-radius: 4px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      opacity: 0.7;
+      margin-right: 0.5rem;
+    }
+    .file-group h2 .edit-btn:hover { opacity: 1; color: #eee; }
   </style>
 </head>
 <body>
@@ -245,6 +392,33 @@
   <main id="tasks"></main>
   <div id="loading">Ładowanie...</div>
   <div id="empty" style="display:none">Brak zadań</div>
+
+  <!-- Modal Editor -->
+  <div id="editor-modal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="editor-title">Edycja pliku</h3>
+        <button class="modal-close" onclick="closeEditor()">&times;</button>
+      </div>
+      
+      <div class="modal-tabs">
+        <button class="modal-tab active" onclick="switchTab('edit')">Edit</button>
+        <button class="modal-tab" onclick="switchTab('preview')">Preview</button>
+      </div>
+      
+      <div class="modal-content">
+        <div id="edit-panel" class="tab-panel active">
+          <textarea id="editor-textarea" spellcheck="false"></textarea>
+        </div>
+        <div id="preview-panel" class="tab-panel"></div>
+      </div>
+      
+      <div class="modal-footer">
+        <button onclick="closeEditor()">Anuluj</button>
+        <button id="save-file-btn" onclick="saveFile()">Zapisz</button>
+      </div>
+    </div>
+  </div>
 
   <script src="ui.js"></script>
 </body>

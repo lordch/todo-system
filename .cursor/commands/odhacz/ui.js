@@ -3,7 +3,12 @@ const state = {
   tasks: [],
   original: new Map(),
   current: new Map(),
-  folders: []
+  folders: [],
+  editor: {
+    file: null,
+    content: null,
+    hash: null
+  }
 };
 
 // Elements
@@ -163,6 +168,18 @@ function render() {
     filename.textContent = file;
     filename.onclick = () => group.classList.toggle('collapsed');
     
+    const actions = document.createElement('div');
+    actions.style.display = 'flex';
+    actions.style.gap = '0.5rem';
+    
+    const editBtn = document.createElement('button');
+    editBtn.className = 'edit-btn';
+    editBtn.textContent = '✏️';
+    editBtn.onclick = (e) => {
+      e.stopPropagation();
+      openFileEditor(file);
+    };
+    
     const addBtn = document.createElement('button');
     addBtn.className = 'add-task-btn';
     addBtn.textContent = '+';
@@ -171,8 +188,11 @@ function render() {
       toggleAddTaskForm(group, file);
     };
     
+    actions.appendChild(editBtn);
+    actions.appendChild(addBtn);
+    
     header.appendChild(filename);
-    header.appendChild(addBtn);
+    header.appendChild(actions);
     group.appendChild(header);
     
     // Formularz dodawania taska
@@ -390,6 +410,127 @@ async function addTask(file, button) {
     button.textContent = 'Dodaj';
   }
 }
+
+// File Editor
+async function openFileEditor(file) {
+  const modal = $('#editor-modal');
+  const title = $('#editor-title');
+  const textarea = $('#editor-textarea');
+  
+  title.textContent = `Edycja: ${file}`;
+  textarea.value = 'Ładowanie...';
+  modal.classList.add('active');
+  
+  try {
+    const resp = await fetch(`/api/file?path=${encodeURIComponent(file)}`);
+    const data = await resp.json();
+    
+    if (data.error) {
+      alert(`Błąd: ${data.error}`);
+      closeEditor();
+      return;
+    }
+    
+    state.editor.file = file;
+    state.editor.content = data.content;
+    state.editor.hash = data.hash;
+    
+    textarea.value = data.content;
+    switchTab('edit');
+  } catch (err) {
+    alert(`Błąd ładowania: ${err.message}`);
+    closeEditor();
+  }
+}
+
+function closeEditor() {
+  const modal = $('#editor-modal');
+  modal.classList.remove('active');
+  state.editor = { file: null, content: null, hash: null };
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  
+  if (tab === 'edit') {
+    document.querySelector('.modal-tab:nth-child(1)').classList.add('active');
+    $('#edit-panel').classList.add('active');
+  } else if (tab === 'preview') {
+    document.querySelector('.modal-tab:nth-child(2)').classList.add('active');
+    $('#preview-panel').classList.add('active');
+    renderPreview();
+  }
+}
+
+async function saveFile() {
+  const file = state.editor.file;
+  const content = $('#editor-textarea').value;
+  const hash = state.editor.hash;
+  
+  if (!file) return;
+  
+  const btn = $('#save-file-btn');
+  btn.disabled = true;
+  btn.textContent = 'Zapisuję...';
+  
+  try {
+    const resp = await fetch('/api/file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file, content, original_hash: hash })
+    });
+    
+    const result = await resp.json();
+    
+    if (result.success) {
+      alert(`✅ Zapisano: ${file}`);
+      closeEditor();
+      await loadTasks();
+    } else {
+      alert(`❌ Błąd: ${result.error}`);
+    }
+  } catch (err) {
+    alert(`❌ Błąd: ${err.message}`);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Zapisz';
+  }
+}
+
+function renderPreview() {
+  const content = $('#editor-textarea').value;
+  const preview = $('#preview-panel');
+  
+  // Prosty rendering (bez external lib)
+  let html = content
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^- \[ \] (.+)$/gm, '<li>☐ $1</li>')
+    .replace(/^- \[x\] (.+)$/gm, '<li>☑ $1</li>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    .replace(/\n\n/g, '<br><br>');
+  
+  preview.innerHTML = html;
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 's' && state.editor.file) {
+    e.preventDefault();
+    saveFile();
+  }
+  if (e.key === 'Escape' && state.editor.file) {
+    closeEditor();
+  }
+});
 
 init();
 

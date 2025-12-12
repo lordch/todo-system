@@ -7,7 +7,8 @@ const state = {
   editor: {
     file: null,
     content: null,
-    hash: null
+    hash: null,
+    mode: 'read'
   }
 };
 
@@ -506,7 +507,8 @@ async function openFileEditor(file) {
     state.editor.hash = data.hash;
     
     textarea.value = data.content;
-    switchTab('edit');
+    renderRichFromTextarea();
+    switchMode('read');
   } catch (err) {
     alert(`Błąd ładowania: ${err.message}`);
     closeEditor();
@@ -517,31 +519,38 @@ function closeEditor() {
   const modal = $('#editor-modal');
   modal.classList.remove('active');
   document.body.classList.remove('modal-open');
-  state.editor = { file: null, content: null, hash: null };
+  state.editor = { file: null, content: null, hash: null, mode: 'read' };
 }
 
-function switchTab(tab) {
-  // If leaving preview, persist changes back to textarea
-  if ($('#preview-panel')?.classList.contains('active')) {
+function switchMode(mode) {
+  const editor = $('#rt-editor');
+  const toolbar = document.querySelector('.rt-toolbar');
+  if (!editor) return;
+
+  if (state.editor.mode === 'edit' && mode === 'read') {
     syncFromRichText();
   }
 
-  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  
-  if (tab === 'edit') {
-    document.querySelector('.modal-tab:nth-child(1)').classList.add('active');
-    $('#edit-panel').classList.add('active');
-  } else if (tab === 'preview') {
-    document.querySelector('.modal-tab:nth-child(2)').classList.add('active');
-    $('#preview-panel').classList.add('active');
-    renderPreview();
+  document.querySelectorAll('.modal-tab').forEach((t) => {
+    t.classList.toggle('active', t.dataset.mode === mode);
+  });
+
+  renderRichFromTextarea();
+
+  if (mode === 'edit') {
+    if (toolbar) toolbar.style.display = 'flex';
+    editor.setAttribute('contenteditable', 'true');
+  } else {
+    if (toolbar) toolbar.style.display = 'none';
+    editor.setAttribute('contenteditable', 'false');
   }
+
+  state.editor.mode = mode;
 }
 
 async function saveFile() {
   const file = state.editor.file;
-  if ($('#preview-panel')?.classList.contains('active')) {
+  if (state.editor.mode === 'edit') {
     syncFromRichText();
   }
   const content = $('#editor-textarea').value;
@@ -577,7 +586,7 @@ async function saveFile() {
   }
 }
 
-function renderPreview() {
+function renderRichFromTextarea() {
   const content = $('#editor-textarea').value;
   const editor = $('#rt-editor');
   if (!editor) return;

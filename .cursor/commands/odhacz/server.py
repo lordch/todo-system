@@ -112,13 +112,13 @@ def git_sync():
     # 3. Push
     push_ok, push_out = git_exec(["push"], REPO_ROOT)
     
-    if push_ok[0]:  # git_exec returns (bool, str)
+    if push_ok:
         global last_sync, pending_changes
         last_sync = datetime.now()
         pending_changes = False
-        return True, {"message": "Zsynchronizowane", "commits": commit_out, "pull": pull_out, "push": push_out[1]}
+        return True, {"message": "Zsynchronizowane", "commits": commit_out, "pull": pull_out, "push": push_out}
     else:
-        return False, {"error": "push_failed", "details": push_out[1]}
+        return False, {"error": "push_failed", "details": push_out}
 
 
 def scan_tasks(path_filter: str = "", checked_filter: str = "all", search: str = "") -> list:

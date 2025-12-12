@@ -148,6 +148,22 @@
     .file-group h2 .filename::before { content: "▼ "; font-size: 0.7rem; }
     .file-group.collapsed h2 .filename::before { content: "▶ "; }
     
+    .section-header {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      background: #1a2744;
+      color: #aaa;
+      cursor: pointer;
+      user-select: none;
+      border-top: 1px solid #0f3460;
+    }
+    .section-header:hover { background: #1f2f54; }
+    .section-header::before { content: "▼ "; font-size: 0.6rem; opacity: 0.6; }
+    
+    .section-tasks.collapsed { display: none; }
+    .section-tasks.collapsed + .section-header::before { content: "▶ "; }
+    
     .task {
       display: flex;
       align-items: flex-start;

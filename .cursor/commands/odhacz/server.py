@@ -107,7 +107,7 @@ def git_sync():
 
 
 def scan_tasks(path_filter: str = "", checked_filter: str = "all", search: str = "") -> list:
-    """Skanuje markdowny i zwraca listę tasków."""
+    """Skanuje markdowny i zwraca listę tasków z sekcjami."""
     tasks = []
     files_to_scan = []
     
@@ -117,6 +117,8 @@ def scan_tasks(path_filter: str = "", checked_filter: str = "all", search: str =
             files_to_scan.append(p)
         elif p.is_dir():
             files_to_scan.extend(sorted(p.rglob("*.md")))
+    
+    header_re = re.compile(r"^(#{1,6})\s+(.+)$")
     
     for file_path in files_to_scan:
         file_rel = str(file_path.relative_to(REPO_ROOT))
@@ -129,7 +131,18 @@ def scan_tasks(path_filter: str = "", checked_filter: str = "all", search: str =
         except Exception:
             continue
         
+        current_section = None
+        
         for idx, line in enumerate(content.splitlines(), start=1):
+            # Sprawdź czy to header
+            header_match = header_re.match(line)
+            if header_match:
+                level = len(header_match.group(1))
+                title = header_match.group(2)
+                current_section = {"level": level, "title": title}
+                continue
+            
+            # Sprawdź czy to checkbox
             m = CHECKBOX_RE.match(line)
             if not m:
                 continue
@@ -150,6 +163,7 @@ def scan_tasks(path_filter: str = "", checked_filter: str = "all", search: str =
                 "text": line,
                 "checked": is_checked,
                 "original_line": line,
+                "section": current_section,
             })
     
     return tasks

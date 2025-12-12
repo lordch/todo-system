@@ -132,16 +132,27 @@ function render() {
   
   empty.style.display = 'none';
   
-  // Group by file
+  // Group by file, then by section
   const byFile = new Map();
   state.tasks.forEach(t => {
     if (!byFile.has(t.file)) byFile.set(t.file, []);
     byFile.get(t.file).push(t);
   });
   
+  // Dla każdego pliku, pogrupuj po sekcjach
+  byFile.forEach((tasks, file) => {
+    const bySection = new Map();
+    tasks.forEach(t => {
+      const sectionKey = t.section ? t.section.title : '(bez sekcji)';
+      if (!bySection.has(sectionKey)) bySection.set(sectionKey, []);
+      bySection.get(sectionKey).push(t);
+    });
+    byFile.set(file, bySection);
+  });
+  
   container.innerHTML = '';
   
-  byFile.forEach((tasks, file) => {
+  byFile.forEach((bySectionMap, file) => {
     const group = document.createElement('div');
     group.className = 'file-group';
     
@@ -176,32 +187,48 @@ function render() {
     const tasksDiv = document.createElement('div');
     tasksDiv.className = 'tasks';
     
-    tasks.forEach(t => {
-      const id = `${t.file}:${t.line}`;
-      const isChecked = state.current.get(id);
-      const wasChanged = isChecked !== state.original.get(id);
+    // Renderuj sekcje
+    bySectionMap.forEach((sectionTasks, sectionName) => {
+      if (sectionName !== '(bez sekcji)') {
+        const sectionHeader = document.createElement('div');
+        sectionHeader.className = 'section-header';
+        sectionHeader.textContent = sectionName;
+        sectionHeader.onclick = () => sectionHeader.nextElementSibling.classList.toggle('collapsed');
+        tasksDiv.appendChild(sectionHeader);
+      }
       
-      const div = document.createElement('div');
-      div.className = 'task' + (isChecked ? ' checked' : '') + (wasChanged ? ' changed' : '');
+      const sectionDiv = document.createElement('div');
+      sectionDiv.className = 'section-tasks';
       
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.id = 'cb-' + id.replace(/[^a-z0-9]/gi, '_');
-      checkbox.checked = isChecked;
-      checkbox.addEventListener('change', () => toggle(t));
+      sectionTasks.forEach(t => {
+        const id = `${t.file}:${t.line}`;
+        const isChecked = state.current.get(id);
+        const wasChanged = isChecked !== state.original.get(id);
+        
+        const div = document.createElement('div');
+        div.className = 'task' + (isChecked ? ' checked' : '') + (wasChanged ? ' changed' : '');
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = 'cb-' + id.replace(/[^a-z0-9]/gi, '_');
+        checkbox.checked = isChecked;
+        checkbox.addEventListener('change', () => toggle(t));
+        
+        const label = document.createElement('label');
+        label.htmlFor = checkbox.id;
+        label.textContent = t.text.replace(/^-\s*\[.\]\s*/, '');
+        
+        const lineNum = document.createElement('span');
+        lineNum.className = 'line-num';
+        lineNum.textContent = 'L' + t.line;
+        
+        div.appendChild(checkbox);
+        div.appendChild(label);
+        div.appendChild(lineNum);
+        sectionDiv.appendChild(div);
+      });
       
-      const label = document.createElement('label');
-      label.htmlFor = checkbox.id;
-      label.textContent = t.text.replace(/^-\s*\[.\]\s*/, '');
-      
-      const lineNum = document.createElement('span');
-      lineNum.className = 'line-num';
-      lineNum.textContent = 'L' + t.line;
-      
-      div.appendChild(checkbox);
-      div.appendChild(label);
-      div.appendChild(lineNum);
-      tasksDiv.appendChild(div);
+      tasksDiv.appendChild(sectionDiv);
     });
     
     group.appendChild(tasksDiv);

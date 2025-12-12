@@ -69,10 +69,15 @@ def git_clone():
     
     ok, out = git_exec(["clone", url, str(DATA_DIR)])
     
-    if ok and GITHUB_TOKEN:
+    if ok:
+        # Skonfiguruj git identity
+        git_exec(["config", "user.name", "Railway Odhacz"], DATA_DIR)
+        git_exec(["config", "user.email", "odhacz@railway.app"], DATA_DIR)
+        
         # Skonfiguruj remote z tokenem
-        remote_url = REPO_URL.replace("https://", f"https://{GITHUB_TOKEN}@")
-        git_exec(["remote", "set-url", "origin", remote_url], DATA_DIR)
+        if GITHUB_TOKEN:
+            remote_url = REPO_URL.replace("https://", f"https://{GITHUB_TOKEN}@")
+            git_exec(["remote", "set-url", "origin", remote_url], DATA_DIR)
     
     return ok, out
 
@@ -433,6 +438,10 @@ def main():
         
         if git_dir.exists():
             print(f"✓ Repo już istnieje: {DATA_DIR}")
+            
+            # Skonfiguruj git identity
+            git_exec(["config", "user.name", "Railway Odhacz"], DATA_DIR)
+            git_exec(["config", "user.email", "odhacz@railway.app"], DATA_DIR)
             
             # Upewnij się że remote ma token
             if GITHUB_TOKEN:

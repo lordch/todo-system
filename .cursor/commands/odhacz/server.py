@@ -68,6 +68,12 @@ def git_clone():
         url = REPO_URL.replace("https://", f"https://{GITHUB_TOKEN}@")
     
     ok, out = git_exec(["clone", url, str(DATA_DIR)])
+    
+    if ok and GITHUB_TOKEN:
+        # Skonfiguruj remote z tokenem
+        remote_url = REPO_URL.replace("https://", f"https://{GITHUB_TOKEN}@")
+        git_exec(["remote", "set-url", "origin", remote_url], DATA_DIR)
+    
     return ok, out
 
 
@@ -431,6 +437,13 @@ def main():
         
         if git_dir.exists():
             print(f"✓ Repo już istnieje: {DATA_DIR}")
+            
+            # Upewnij się że remote ma token
+            if GITHUB_TOKEN:
+                remote_url = REPO_URL.replace("https://", f"https://{GITHUB_TOKEN}@")
+                git_exec(["remote", "set-url", "origin", remote_url], DATA_DIR)
+                print("✓ Remote URL zaktualizowany z tokenem")
+            
             print("🔄 Pull...")
             ok, out = git_pull()
             if not ok:

@@ -49,6 +49,7 @@
 - [Kontekst Użytkownika](instructions/user_context.md) - Ważne osoby, miejsca i tło
 - [Statusy i oznaczenia](instructions/statusy-i-oznaczenia.md)
 - [Pomysły i notatki](system/ideas-notes.md)
+- [Design: /odhacz + Agent SDK + front matter](system/odhacz-design-system.md)
 
 ---
-*Ostatnia aktualizacja: 2025-12-04*
+*Ostatnia aktualizacja: 2025-12-12*

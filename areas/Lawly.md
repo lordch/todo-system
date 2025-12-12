@@ -91,4 +91,4 @@ _Brak aktualnych zadań_
 
 
 - [x] test task
-- [ ] nowy task
+- [x] nowy task

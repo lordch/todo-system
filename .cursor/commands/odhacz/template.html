@@ -321,29 +321,12 @@
     .tab-panel.active { display: flex; flex-direction: column; }
     
     #editor-textarea {
-      flex: 1;
-      width: 100%;
-      padding: 1rem;
-      background: #0a0a0a;
-      color: #e0e0e0;
-      border: none;
-      border-radius: 0;
-      font-family: "SF Mono", "Monaco", "Consolas", monospace;
-      font-size: 0.9rem;
-      line-height: 1.7;
-      resize: none;
+      display: none;
     }
     #editor-textarea:focus { outline: none; }
-    
-    #preview-panel {
-      background: #0a0a0a;
-      padding: 0;
-      border-radius: 0;
-      overflow: auto;
-      line-height: 1.7;
-    }
+
     .rt-toolbar {
-      display: flex;
+      display: none;
       gap: 0.5rem;
       flex-wrap: wrap;
       padding: 0.75rem 0.75rem;
@@ -367,18 +350,18 @@
       content: "Zacznij pisać…";
       color: #555;
     }
-    #preview-panel h1, #preview-panel h2, #preview-panel h3 { 
+    #rt-editor h1, #rt-editor h2, #rt-editor h3 { 
       color: #999; 
       margin-top: 1.5rem;
       margin-bottom: 0.75rem;
       font-weight: 500;
     }
-    #preview-panel h1 { font-size: 1.2rem; }
-    #preview-panel h2 { font-size: 1rem; }
-    #preview-panel h3 { font-size: 0.9rem; }
-    #preview-panel ul { margin-left: 1.5rem; }
-    #preview-panel li { margin: 0.25rem 0; }
-    #preview-panel code { 
+    #rt-editor h1 { font-size: 1.2rem; }
+    #rt-editor h2 { font-size: 1rem; }
+    #rt-editor h3 { font-size: 0.9rem; }
+    #rt-editor ul { margin-left: 1.5rem; }
+    #rt-editor li { margin: 0.25rem 0; }
+    #rt-editor code { 
       background: #1a1a1a; 
       padding: 0.2rem 0.4rem; 
       border-radius: 2px;
@@ -459,25 +442,21 @@
       </div>
       
       <div class="modal-tabs">
-        <button class="modal-tab active" onclick="switchTab('edit')">Edit</button>
-        <button class="modal-tab" onclick="switchTab('preview')">Preview</button>
+        <button class="modal-tab active" data-mode="read" onclick="switchMode('read')">Odczyt</button>
+        <button class="modal-tab" data-mode="edit" onclick="switchMode('edit')">Edycja</button>
       </div>
       
       <div class="modal-content">
-        <div id="edit-panel" class="tab-panel active">
-          <textarea id="editor-textarea" spellcheck="false"></textarea>
+        <textarea id="editor-textarea" spellcheck="false"></textarea>
+        <div class="rt-toolbar">
+          <button type="button" onclick="rtCmd('bold')"><b>B</b></button>
+          <button type="button" onclick="rtCmd('italic')"><i>I</i></button>
+          <button type="button" onclick="rtCmd('code')">`code`</button>
+          <button type="button" onclick="rtCmd('h1')">H1</button>
+          <button type="button" onclick="rtCmd('h2')">H2</button>
+          <button type="button" onclick="rtCmd('ul')">• lista</button>
         </div>
-        <div id="preview-panel" class="tab-panel">
-          <div class="rt-toolbar">
-            <button type="button" onclick="rtCmd('bold')"><b>B</b></button>
-            <button type="button" onclick="rtCmd('italic')"><i>I</i></button>
-            <button type="button" onclick="rtCmd('code')">`code`</button>
-            <button type="button" onclick="rtCmd('h1')">H1</button>
-            <button type="button" onclick="rtCmd('h2')">H2</button>
-            <button type="button" onclick="rtCmd('ul')">• lista</button>
-          </div>
-          <div id="rt-editor" contenteditable="true"></div>
-        </div>
+        <div id="rt-editor" contenteditable="false"></div>
       </div>
       
       <div class="modal-footer">

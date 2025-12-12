@@ -326,22 +326,29 @@
     #editor-textarea:focus { outline: none; }
     
     #preview-panel {
-      background: #1a1a2e;
+      background: #0a0a0a;
       padding: 1.5rem;
-      border-radius: 4px;
+      border-radius: 0;
       overflow: auto;
-      line-height: 1.6;
+      line-height: 1.7;
     }
     #preview-panel h1, #preview-panel h2, #preview-panel h3 { 
-      color: #e94560; 
-      margin-top: 1rem;
-      margin-bottom: 0.5rem;
+      color: #999; 
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
     }
+    #preview-panel h1 { font-size: 1.2rem; }
+    #preview-panel h2 { font-size: 1rem; }
+    #preview-panel h3 { font-size: 0.9rem; }
     #preview-panel ul { margin-left: 1.5rem; }
+    #preview-panel li { margin: 0.25rem 0; }
     #preview-panel code { 
-      background: #0f3460; 
+      background: #1a1a1a; 
       padding: 0.2rem 0.4rem; 
-      border-radius: 3px; 
+      border-radius: 2px;
+      font-family: monospace;
+      font-size: 0.85rem;
     }
     
     .modal-footer {

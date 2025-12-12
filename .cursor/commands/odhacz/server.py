@@ -78,25 +78,19 @@ def git_clone():
 
 
 def git_pull():
-    """Pull zmian z GitHub."""
+    """Pull zmian z GitHub (bez rebase)."""
     global last_sync
-    ok, out = git_exec(["pull", "--rebase"], REPO_ROOT)
+    ok, out = git_exec(["pull", "--no-rebase"], REPO_ROOT)
     if ok:
         last_sync = datetime.now()
     return ok, out
 
 
 def git_push():
-    """Push zmian do GitHub."""
-    global last_sync, pending_changes
-    
-    # Commit jeśli są zmiany
-    git_exec(["add", "."], REPO_ROOT)
-    ok, out = git_exec(["commit", "-m", f"odhacz: sync {datetime.now().isoformat()}"], REPO_ROOT)
-    
-    # Push
+    """Push zmian do GitHub (bez commit - zakładamy że już zcommitowane)."""
     ok, out = git_exec(["push"], REPO_ROOT)
     if ok:
+        global last_sync, pending_changes
         last_sync = datetime.now()
         pending_changes = False
     return ok, out
@@ -104,25 +98,27 @@ def git_push():
 
 def git_sync():
     """Pull + Push z obsługą uncommitted changes."""
-    # Commit lokalne zmiany jeśli są
+    # 1. Commit wszystkie lokalne zmiany
     git_exec(["add", "."], REPO_ROOT)
-    has_changes, _ = git_exec(["diff", "--cached", "--quiet"], REPO_ROOT)
+    commit_ok, commit_out = git_exec(["commit", "-m", f"odhacz: sync {datetime.now().isoformat()}"], REPO_ROOT)
     
-    if not has_changes:  # diff returns non-zero if there are changes
-        commit_ok, commit_out = git_exec(["commit", "-m", f"odhacz: auto-commit {datetime.now().isoformat()}"], REPO_ROOT)
-    
-    # Pull
+    # 2. Pull (merge, nie rebase)
     pull_ok, pull_out = git_pull()
-    if not pull_ok and "CONFLICT" in pull_out:
-        return False, {"error": "conflict", "details": pull_out}
+    if not pull_ok:
+        if "CONFLICT" in pull_out:
+            return False, {"error": "conflict", "details": pull_out}
+        # Inne błędy pull nie są krytyczne
     
-    # Push
-    push_ok, push_out = git_push()
+    # 3. Push
+    push_ok, push_out = git_exec(["push"], REPO_ROOT)
     
-    if push_ok:
-        return True, {"message": "Zsynchronizowane", "pull": pull_out, "push": push_out}
+    if push_ok[0]:  # git_exec returns (bool, str)
+        global last_sync, pending_changes
+        last_sync = datetime.now()
+        pending_changes = False
+        return True, {"message": "Zsynchronizowane", "commits": commit_out, "pull": pull_out, "push": push_out[1]}
     else:
-        return False, {"error": "push_failed", "details": push_out}
+        return False, {"error": "push_failed", "details": push_out[1]}
 
 
 def scan_tasks(path_filter: str = "", checked_filter: str = "all", search: str = "") -> list:

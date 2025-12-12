@@ -675,7 +675,7 @@ function htmlToMarkdown(rootEl) {
     const parts = [];
     el.childNodes.forEach((n) => {
       if (n.nodeType === Node.TEXT_NODE) {
-        parts.push(n.nodeValue || '');
+        parts.push((n.nodeValue || '').replace(/\u200B/g, ''));
         return;
       }
       if (n.nodeType !== Node.ELEMENT_NODE) return;
@@ -810,7 +810,10 @@ function onRtEditorKeydown(e) {
   e.preventDefault();
 
   const span = li.querySelector('span');
-  const text = (span?.textContent || '').replace(/\u00a0/g, ' ').trim();
+  const text = (span?.textContent || '')
+    .replace(/\u200B/g, '') // ZWSP placeholder for caret
+    .replace(/\u00a0/g, ' ') // nbsp
+    .trim();
 
   if (!text) {
     const after = document.createElement('div');
@@ -866,7 +869,8 @@ function createTaskLi(checked, text) {
   cb.setAttribute('contenteditable', 'false');
   cb.tabIndex = -1;
   const span = document.createElement('span');
-  span.textContent = text || '';
+  // Use ZWSP so caret is visible but no "space" is inserted.
+  span.textContent = text ? text : '\u200B';
   li.appendChild(cb);
   li.appendChild(span);
   return li;

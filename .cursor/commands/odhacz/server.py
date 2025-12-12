@@ -270,10 +270,15 @@ class OdhaczHandler(SimpleHTTPRequestHandler):
         self.wfile.write(b"401 Unauthorized")
     
     def do_GET(self):
-        if not self.check_auth():
+        parsed = urllib.parse.urlparse(self.path)
+        
+        # Health check bez auth
+        if parsed.path == "/health":
+            self.send_json({"status": "ok", "mode": "Railway" if IS_RAILWAY else "Local"})
             return
         
-        parsed = urllib.parse.urlparse(self.path)
+        if not self.check_auth():
+            return
         
         if parsed.path == "/api/tasks":
             params = urllib.parse.parse_qs(parsed.query)

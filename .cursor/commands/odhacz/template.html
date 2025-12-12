@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>/odhacz</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
+      background: #1a1a2e;
+      color: #eee;
+      padding: 1rem;
+      line-height: 1.5;
+    }
+    
+    header {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #333;
+    }
+    
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    
+    select, input[type="text"] {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 6px;
+      color: #eee;
+    }
+    select:focus, input:focus { outline: none; border-color: #e94560; }
+    
+    #folder-filter { min-width: 150px; }
+    #checked-filter { min-width: 120px; }
+    #search { flex: 1; min-width: 150px; }
+    
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    
+    #save-btn {
+      background: #e94560;
+      color: white;
+    }
+    #save-btn:hover { background: #d63850; }
+    #save-btn:disabled { background: #555; cursor: not-allowed; }
+    
+    #refresh-btn {
+      background: #0f3460;
+      color: #eee;
+    }
+    #refresh-btn:hover { background: #16213e; }
+    
+    .stats {
+      color: #888;
+      font-size: 0.8rem;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    .stats .changed { color: #e94560; font-weight: bold; }
+    
+    .file-group {
+      margin-bottom: 1rem;
+      background: #16213e;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .file-group h2 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.6rem 1rem;
+      background: #0f3460;
+      color: #e94560;
+      cursor: pointer;
+      user-select: none;
+    }
+    .file-group h2:hover { background: #0a2540; }
+    
+    .file-group.collapsed .tasks { display: none; }
+    .file-group h2::before { content: "▼ "; font-size: 0.7rem; }
+    .file-group.collapsed h2::before { content: "▶ "; }
+    
+    .task {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid #1a1a2e;
+      transition: background 0.15s;
+    }
+    .task:last-child { border-bottom: none; }
+    .task:hover { background: #1a2744; }
+    
+    .task input[type="checkbox"] {
+      width: 1.1rem;
+      height: 1.1rem;
+      margin-top: 0.15rem;
+      accent-color: #e94560;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    
+    .task label {
+      flex: 1;
+      cursor: pointer;
+      word-break: break-word;
+      font-size: 0.9rem;
+    }
+    
+    .task.checked label {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+    
+    .task .line-num {
+      color: #555;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+    
+    .task.changed {
+      background: #2a1a2e;
+      border-left: 3px solid #e94560;
+    }
+    
+    #empty, #loading {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+    
+    #loading { color: #e94560; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="filters">
+      <select id="folder-filter">
+        <option value="">Wszystkie foldery</option>
+      </select>
+      <select id="checked-filter">
+        <option value="all">Wszystkie</option>
+        <option value="false">Niezrobione</option>
+        <option value="true">Zrobione</option>
+      </select>
+      <input type="text" id="search" placeholder="Szukaj…">
+    </div>
+    <div class="actions">
+      <button id="refresh-btn" onclick="loadTasks()">Odśwież</button>
+      <button id="save-btn" onclick="saveChanges()" disabled>Zapisz</button>
+    </div>
+    <div class="stats">
+      Wszystkie: <span id="total">0</span> · 
+      Pokazane: <span id="shown">0</span> · 
+      Zmiany: <span id="changes" class="changed">0</span>
+    </div>
+  </header>
+  
+  <main id="tasks"></main>
+  <div id="loading">Ładowanie...</div>
+  <div id="empty" style="display:none">Brak zadań</div>
+
+  <script src="ui.js"></script>
+</body>
+</html>

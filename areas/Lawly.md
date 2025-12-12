@@ -1,7 +1,7 @@
 # Lawly (Area)
 
 **Typ:** Biznes / Rozwój produktu  
-**Ostatnia aktualizacja:** 2025-12-04
+**Ostatnia aktualizacja:** 2025-12-08
 
 ## Standard / Rezultat długoterminowy
 Rozwijać Lawly jako działający marketplace łączący klientów z prawnikami w Polsce.
@@ -33,6 +33,8 @@ Rozwijać Lawly jako działający marketplace łączący klientów z prawnikami 
 
 ## Aktywne projekty
 - [Lawyer Onboarding](../projects/Lawyer-Onboarding.md) 🟡 - US-081: Profile Management
+  - Backend spushowany, draft PR do stworzenia
+  - Frontend - problem z SSH, do naprawienia
 
 ## Backlog pomysłów (projekty do rozpisania)
 - [ ] User Profile Management (klienci)
@@ -84,5 +86,7 @@ _Brak aktualnych zadań_
 - Proste, praktyczne rozwiązania
 - Nie przesadzać
 - Każde narzędzie musi rozwiązywać konkretny problem
+
+
 
 

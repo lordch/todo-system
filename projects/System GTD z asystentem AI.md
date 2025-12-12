@@ -1,14 +1,15 @@
 # System GTD z asystentem AI
 
 ## Status
-**Ostatnia aktualizacja:** 2025-12-04  
-**Stan:** 🟡 Niejasny / Wymaga przemyślenia balansu
+**Ostatnia aktualizacja:** 2025-12-08  
+**Stan:** ⏸️ Wstrzymany / Skupiamy się na używaniu systemu
 
 ### Obecna sytuacja
 - System działa i jest używany na co dzień
-- Użytkownik się nim jara i nie może się powstrzymać od pracy NAD nim
-- Problem: powinien pracować bardziej W systemie (wypełniać zobowiązania) niż NAD systemem (ulepszać go)
-- Potrzeba znalezienia balansu między rozwojem systemu a jego używaniem
+- Użytkownik uspokoił się - za dużo wkrętek, poszedł za szeroko
+- **Decyzja:** Skupić się na prostych, szybkich ale regularnych rytuałach
+- **Plan:** Używać systemu, zobaczyć co wyniknie, potem skonstruować lekki, prosty ale rzetelny system
+- Na razie nie planuje się tym zajmować aktywnie
 
 ---
 

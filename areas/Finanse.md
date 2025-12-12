@@ -23,3 +23,5 @@ _Do uzupełnienia_
 _Do uzupełnienia podczas pracy_
 
 
+
+

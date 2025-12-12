@@ -186,3 +186,5 @@ Agent zawsze dodaje status (domyślnie 🟡 jeśli nie ma następnej akcji)
 Przy ADHD kluczowe jest **nie próbować robić rzeczy niejasnych** - to prowadzi do prokrastynacji. Najpierw trzeba je **rozłożyć na jasne akcje**.
 
 
+
+

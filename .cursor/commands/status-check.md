@@ -122,3 +122,5 @@ Na końcu pokaż podsumowanie:
 | 10-15 minut | 30-60 minut |
 
 
+
+

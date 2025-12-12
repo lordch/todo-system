@@ -1,0 +1,10 @@
+# System GTD z asystentem AI - Reguły Cursor
+
+## Sprawdzanie daty i godziny
+
+**Przy każdej konwersacji:**
+- Sprawdź aktualną datę i godzinę
+- Użyj tej informacji do kontekstualizacji zadań, deadline'ów i daily plans
+- Pamiętaj o strefie czasowej użytkownika (Polska, UTC+1/UTC+2)
+- Przy dodawaniu zadań do daily plans używaj aktualnej daty jako kontekstu
+

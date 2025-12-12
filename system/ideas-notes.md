@@ -176,6 +176,23 @@ listy/               # custom/tematyczne
 
 ---
 
+### Interfejs do odhaczania zadań
+
+**Problem:** Markdown jest świetny do dodawania zadań (szybkie, tekstowe, elastyczne), ale odhaczanie zadań przez edycję `[ ]` na `[x]` w plikach tekstowych nie jest sustainable. To jest fundamentalne ograniczenie koncepcji markdown jako idealnego interfejsu do wszystkich operacji.
+
+**Obserwacja:** 
+- ✅ Dodawanie tekstowe = spoko (wręcz super)
+- ❌ Odhaczanie tekstowe = nienienie
+
+**Pytania do rozważenia:**
+- Czy potrzebny jest dedykowany interfejs (UI) do odhaczania, zachowując markdown jako backend?
+- Czy możliwe jest lepsze wsparcie w edytorze (np. skróty klawiszowe, łatwe przełączanie checkboxów)?
+- Czy można stworzyć hybrydowy system: markdown do dodawania/edytowania, ale prosty UI do szybkiego odhaczania?
+
+**Status:** Do zaprojektowania - priorytet: WYSOKI (dotyka core workflow)
+
+---
+
 ## 📊 Priorytety rozwoju
 
 | Obszar | Pomysł | Złożoność | Wartość |
@@ -186,9 +203,12 @@ listy/               # custom/tematyczne
 | Struktura | Rozdzielenie konteksty/osoby/listy | Średnia | Średnia |
 | Indeksy | Progressive disclosure + propagacja | Wysoka | Średnia |
 | Żywienie | Osobny dokument | Niska | Niska |
+| Interfejs | UI do odhaczania zadań | Wysoka | WYSOKA |
 
 ---
 
-_Ostatnia aktualizacja: 2025-12-04_
+_Ostatnia aktualizacja: 2025-12-12_
+
+
 
 

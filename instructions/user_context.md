@@ -15,6 +15,7 @@ Plik ten zawiera kluczowe informacje o życiu, ludziach i projektach użytkownik
 - **Rusłan:** "Złota rączka"/Fachowiec. Pomaga przy naprawach i instalacjach.
 - **Roman:** Współpracownik (projekt Lawly).
 - **Elżbieta:** Właścicielka mieszkania.
+- **Rodzice:** Mieszkają w Choszczówce, adres: Przełaj 17.
 
 ## 🏠 Miejsca i Nieruchomości
 1. **Nowe Mieszkanie (Wspólne):**

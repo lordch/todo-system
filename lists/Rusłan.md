@@ -6,8 +6,10 @@
 
 ## Do wykonania
 
-- [ ] Wymienić kran w kuchni (wcześniej kupić nowy)
-- [ ] Poprowadzić kabel do nowej szafki kuchennej
+- [ ] Wymienić kran w kuchni (kran kupiony ✅, do wymiany)
+- [ ] Poprowadzić kabel do nowej szafki kuchennej (kable nie kupione)
 - [ ] Zrobić gniazdko natynkowe po lewej od drzwi
-- [ ] Wymienić uszczelki do lodówki
+- [ ] Wymienić uszczelki do lodówki (uszczelka doszła ✅)
 - [ ] Zamontować klapę do kibla (Zofka znalazła śruby)
+
+**Rusłan będzie pon/wt (2025-12-15/16)**

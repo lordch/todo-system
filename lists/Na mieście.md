@@ -2,11 +2,14 @@
 
 Rzeczy do zrobienia poza domem (sprawy urzędowe, wizyty w sklepach, odbiory).
 
-- [ ] Zaprowadzić rower do serwisu
-- [ ] Pojechać do Urzędu Skarbowego Mokotów - wziąć zaświadczenie o płaceniu podatków w Warszawie
+- [ ] Pójść z rowerem po rurę do siodełka
+- [ ] Zaprowadzić rower Mikiego do serwisu (hamulce)
+- [x] Pojechać do Urzędu Skarbowego Mokotów - wziąć zaświadczenie o płaceniu podatków w Warszawie - ✅ ZROBIONE
 - [ ] Odebrać od Hnatiuka blat (przy okazji instalacji piecyka)
-- [ ] Odebrać szafkę z Międzylesia (do pokoju Mikiego, przy okazji wizyty u rodziny Zofki)
-- [ ] Zanieść pranie do pralni → **2025-12-05**
+- [x] Odebrać szafkę z Międzylesia (do pokoju Mikiego, przy okazji wizyty u rodziny Zofki) - ✅ ZROBIONE
+- [x] Zanieść pranie do pralni → **2025-12-05** - ✅ ZROBIONE
+- [ ] Odebrać pranie z pralni → **po 16.12**
+- [ ] Porządek w samochodzie i myjnia
 
 ## Wizyty w sklepach
 

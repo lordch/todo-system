@@ -1,8 +1,8 @@
 # Lawyer Onboarding
 
 ## Status
-**Ostatnia aktualizacja:** 2025-12-04  
-**Stan:** 🟡 W trakcie rozpisywania / Postęp w commitowaniu zmian  
+**Ostatnia aktualizacja:** 2025-12-08  
+**Stan:** 🟡 Umiarkowanie jasny / Ready to go  
 **Obszar:** [Lawly](../areas/Lawly.md)
 
 ### Obecna sytuacja (zaktualizowana)
@@ -349,10 +349,10 @@ curl -X POST http://localhost:8000/api/lawyers/me/profile/ \
 ## Zadania do wykonania (TODO)
 
 ### Priorytet 1: Zrozumienie
-- [ ] 📚 Przejść przez kod z AI (zrozumieć implementację) - **NASTĘPNY KROK**
+- [x] 📚 Przejść przez kod z AI (zrozumieć implementację) - ✅ ZROBIONE
 
 ### Priorytet 2: Testowanie
-- [ ] 🚀 Setup: uruchomić backend i frontend
+- [x] 🚀 Setup: uruchomić backend i frontend - ✅ ZROBIONE
 - [ ] 👥 Stworzyć test users (create_test_users)
 - [ ] 🧪 Test 1: Sprawdzić automatyczne tworzenie profilu
 - [ ] 🧪 Test 2: GET /me/profile/ (różne tokeny)
@@ -362,8 +362,8 @@ curl -X POST http://localhost:8000/api/lawyers/me/profile/ \
 
 ### Priorytet 3: Finalizacja
 - [ ] ✅ Zacommitować `create_test_users.py` (jeśli testy przeszły)
-- [ ] 🔄 Push brancha (backend + frontend)
-- [ ] 📝 Stworzyć PR w GitHub
+- [x] 🔄 Push brancha (backend ✅, frontend - problem z SSH, do naprawienia)
+- [ ] 📝 Stworzyć draft PR w GitHub (backend: https://github.com/lawly-pl/lawly-be/pull/new/feature/US-081-profile-management)
 - [ ] 📬 Oznaczyć Roman do review
 
 ---
@@ -398,5 +398,7 @@ curl -X POST http://localhost:8000/api/lawyers/me/profile/ \
 ## Motto
 
 "Good enough is good enough" - nie musi być perfekcyjne, musi działać.
+
+
 
 

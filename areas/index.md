@@ -34,3 +34,5 @@ Obszary to ciągłe sfery życia i pracy, które wymagają utrzymania standardó
 *Ostatnia aktualizacja: 2025-12-04*
 
 
+
+

@@ -1,12 +1,14 @@
 # 🛒 Leroy Merlin
 
+**Wizyta planowana: sobota 2025-12-13**
+
 ## Do kupienia
 
-- [ ] Bateria do kuchni
+- [ ] Bateria do kuchni (kupiona ✅, do zwrotu stara)
 - [ ] Kable do elektryczności i sprzęt
 
 ## Do zwrotu
 
-- [ ] Bateria (stara)
-- [ ] Kabel
-- [ ] Nić hydrauliczna
+- [x] Bateria (stara) - ✅ ZWROCONE
+- [x] Kabel - ✅ ZWROCONE
+- [x] Nić hydrauliczna - ✅ ZWROCONE

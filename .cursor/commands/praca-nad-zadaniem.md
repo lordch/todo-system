@@ -147,3 +147,5 @@ Agent: Czy kontynuować pracę nad tym zadaniem?
 - Automatyczne linkowanie: agent może automatycznie dodać link do pliku zadania w źródle (opcjonalnie)
 
 
+
+

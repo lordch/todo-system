@@ -134,3 +134,5 @@ Zapisałem projekt w projects/Lawly.md. Kiedy planujesz to zrobić?"
 - Agent powinien być **cierpliwy** - czasem potrzeba kilku iteracji żeby dojść do prawdziwego blokera
 
 
+
+

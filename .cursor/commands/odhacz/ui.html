@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>/odhacz</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: Canvas;
+        --fg: CanvasText;
+        --muted: color-mix(in oklab, CanvasText 60%, Canvas 40%);
+        --border: color-mix(in oklab, CanvasText 18%, Canvas 82%);
+        --accent: color-mix(in oklab, Highlight 80%, Canvas 20%);
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        background: var(--bg);
+        color: var(--fg);
+      }
+      header {
+        position: sticky;
+        top: 0;
+        background: color-mix(in oklab, Canvas 92%, CanvasText 8%);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 16px;
+        z-index: 10;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      input[type="search"] {
+        width: min(720px, 100%);
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--bg);
+        color: var(--fg);
+      }
+      button {
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--bg);
+        color: var(--fg);
+        cursor: pointer;
+      }
+      button.primary {
+        border-color: color-mix(in oklab, Highlight 40%, var(--border) 60%);
+        background: color-mix(in oklab, Highlight 18%, Canvas 82%);
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      main {
+        padding: 16px;
+        max-width: 980px;
+        margin: 0 auto;
+      }
+      .meta {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .file {
+        margin: 18px 0 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border);
+      }
+      .file h2 {
+        margin: 0 0 6px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+      }
+      .tasks {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      label.task {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 10px 10px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+      }
+      label.task input {
+        margin-top: 2px;
+      }
+      .taskText {
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-size: 13px;
+        line-height: 1.35;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+      }
+      .taskLine {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+      }
+      .status {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      #toast {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--bg);
+        color: var(--fg);
+        max-width: min(520px, calc(100vw - 32px));
+        display: none;
+      }
+      #toast.show {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="row">
+        <input
+          id="q"
+          type="search"
+          placeholder="Szukaj… (treść lub ścieżka pliku)"
+        />
+        <button id="reload" title="Wczytaj ponownie">Odśwież</button>
+        <button id="save" class="primary" disabled>Zapisz</button>
+        <div id="status" class="status">Ładowanie…</div>
+      </div>
+      <div class="meta" id="meta"></div>
+    </header>
+    <main>
+      <div id="app"></div>
+    </main>
+    <div id="toast"></div>
+    <script src="/ui.js"></script>
+  </body>
+</html>

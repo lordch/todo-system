@@ -1,9 +1,10 @@
 # Lawly (Area)
 
-**Typ:** Biznes / Rozwój produktu  
+**Typ:** Biznes / Rozwój produktu
 **Ostatnia aktualizacja:** 2025-12-08
 
 ## Standard / Rezultat długoterminowy
+
 Rozwijać Lawly jako działający marketplace łączący klientów z prawnikami w Polsce.
 
 ---
@@ -32,11 +33,13 @@ Rozwijać Lawly jako działający marketplace łączący klientów z prawnikami 
 ---
 
 ## Aktywne projekty
+
 - [Lawyer Onboarding](../projects/Lawyer-Onboarding.md) 🟡 - US-081: Profile Management
-  - Backend spushowany, draft PR do stworzenia
-  - Frontend - problem z SSH, do naprawienia
+- Backend spushowany, draft PR do stworzenia
+- Frontend - problem z SSH, do naprawienia
 
 ## Backlog pomysłów (projekty do rozpisania)
+
 - [ ] User Profile Management (klienci)
 - [ ] Service Management (CRUD usług prawnika)
 - [ ] Kalendarze, sloty, rezerwacje
@@ -45,11 +48,13 @@ Rozwijać Lawly jako działający marketplace łączący klientów z prawnikami 
 - [ ] System recenzji i ocen
 
 ## Zadania operacyjne (nie-projekty)
+
 _Brak aktualnych zadań_
 
 ---
 
 ## Dalsza kolejność (roadmap)
+
 1. Profile & Service Management
 2. Kalendarze, sloty, rezerwacje
 3. Case management
@@ -63,32 +68,28 @@ _Brak aktualnych zadań_
 **Pomysły na wykorzystanie AI w workflow:**
 
 1. **Cursor AI do nauki kodu** ✅ (w trakcie):
-   - Przejść przez implementację kawałeczkami
-   - AI pokazuje kontekst, sprawdza zrozumienie
-   - Buduje confidence przed review
+- Przejść przez implementację kawałeczkami
+- AI pokazuje kontekst, sprawdza zrozumienie
+- Buduje confidence przed review
 
 2. **Agent do code review** (prosty):
-   - Checklist przed push: testy? dokumentacja? typy?
-   - Automatyczne sprawdzenie czy są wszystkie potrzebne pliki
+- Checklist przed push: testy? dokumentacja? typy?
+- Automatyczne sprawdzenie czy są wszystkie potrzebne pliki
 
 3. **Agent do generowania testów** (przyszłość):
-   - Gdy dodajesz nowy endpoint, agent sugeruje testy
+- Gdy dodajesz nowy endpoint, agent sugeruje testy
 
 4. **Workflow automation** (prosty):
-   - Jeden command do: commit → push → create PR
-   - Szablon PR description
+- Jeden command do: commit → push → create PR
+- Szablon PR description
 
 5. **Agentowe rozwiązanie w Lawly** (długoterminowe):
-   - AI do automatyzacji matchingu klientów z prawnikami
-   - Chatbot do pomocy klientom w wyborze prawnika
+- AI do automatyzacji matchingu klientów z prawnikami
+- Chatbot do pomocy klientom w wyborze prawnika
 
-**Klucz:** 
+**Klucz:**
 - Proste, praktyczne rozwiązania
 - Nie przesadzać
 - Każde narzędzie musi rozwiązywać konkretny problem
 
-
-
-
-- [x] test task
-- [x] nowy task
+-

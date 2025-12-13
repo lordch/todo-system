@@ -4,8 +4,9 @@
 
 ## Do kupienia
 
-- [ ] Bateria do kuchni (kupiona ✅, do zwrotu stara)
+- [x] Bateria do kuchni (kupiona ✅, do zwrotu stara)
 - [ ] Kable do elektryczności i sprzęt
+- [ ] Obczaić kaloryfery elektryczne
 
 ## Do zwrotu
 

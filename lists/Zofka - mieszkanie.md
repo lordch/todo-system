@@ -17,7 +17,7 @@ Notatki dotyczące wspólnych spraw mieszkaniowych (nie mieszkania Pegaza).
 
 ### Do kupienia
 - [x] Bateria do kuchni
-- [ ] Kable do elektryczności i sprzęt
+- [x] Kable do elektryczności i sprzęt
 
 ### Do zwrotu
 - [x] Bateria (stara)
@@ -52,7 +52,7 @@ Notatki dotyczące wspólnych spraw mieszkaniowych (nie mieszkania Pegaza).
 
 ## 📱 Do zamówienia/znalezienia
 
-- [ ] Uszczelki do lodówki
-- [ ] Instalacja piecyka
+- [x] Uszczelki do lodówki
+- [x] Instalacja piecyka
 - [ ] Szafki nocne
 

@@ -13,8 +13,8 @@ Utrzymywać dom w porządku, organizować przestrzeń, dbać o codzienne potrzeb
 
 ## Zadania operacyjne
 
-- [ ] Rozpakować moje ubrania
-- [ ] porządek u mikiego
+- [x] Rozpakować moje ubrania
+- [x] porządek u mikiego
 - [ ] pranie ciemne
 
 ## Backlog pomysłów (projekty do rozpisania)

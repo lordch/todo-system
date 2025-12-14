@@ -3,7 +3,7 @@
 Zadania do wykonania podczas najbliższej wizyty (opcjonalnie: sobota 2025-12-13).
 
 ## Do zabrania
-- [ ] Pranie
+- [x] Pranie
 - [ ] Lampka Miki
 - [ ] Moja lampka biurkowa?
 - [ ] Przedłużacz

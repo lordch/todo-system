@@ -14,5 +14,5 @@ Rzeczy do zrobienia poza domem (sprawy urzędowe, wizyty w sklepach, odbiory).
 ## Wizyty w sklepach
 
 - [ ] Wizyta w IKEA (zobacz: [IKEA.md](IKEA.md))
-- [ ] Wizyta w Leroy Merlin (zobacz: [Leroy Merlin.md](Leroy%20Merlin.md))
+- [x] Wizyta w Leroy Merlin (zobacz: [Leroy Merlin.md](Leroy%20Merlin.md))
 
